@@ -4,12 +4,50 @@ type: log
 tags: [log, wiki]
 direction: prepend (newest on top)
 append_only: true
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 > **Append-only, prepend-order log.** New entries go directly below this
 > preamble (newest on top). Never edit or delete past entries — they are
 > the historical record. Same convention applies to `wiki/Log/pulse.md`.
+
+## [2026-05-13] lint | inline-code lint fix + 12 cross-refs + 15 new concept/system/research pages
+- tools/lint baseline: 4 → 3 (1 stale-link fixed via schema change, not content edit). 3 remaining orphans (INDEX/pulse/wiki-ops) are structural-by-design.
+- schema fix: tools/lint/check_stale_links.py now strips inline-code spans (single + double backticks) before scanning so that `[[name]]` quoted in log entries no longer registers as stale-link. Test for prior behavior inverted; double-backtick case added. 12/12 lint tests pass.
+- LLM checks (5 parallel Explore audits): contradictions 0; stale claims 0; orphaned concepts 15 (all seeded — see below); missing cross-refs 15 (12 applied, 2 already correct, 1 false-positive); data gaps 12 (deferred — research pass only).
+- cross-ref backfills (12):
+  - wiki/Entities/Teams/Spider Labs.md (related_projects + body → [[Martin News Chatbot]])
+  - wiki/Entities/Projects/IRCA.md (systems → [[Phoenix]])
+  - wiki/Entities/Systems/Phoenix.md (related_projects + Related-entities body → [[IRCA]], [[AI Assistant]])
+  - wiki/Entities/Projects/AI Assistant.md (systems → [[Phoenix]])
+  - wiki/Entities/Projects/Detection Engineering Hub.md (related_projects → [[Owlint-Sigma]])
+  - wiki/Entities/Projects/Owlint-Sigma.md (related_projects → [[Detection Engineering Hub]])
+  - wiki/Entities/Projects/AIDRA.md (related_teams → [[Labs]])
+  - wiki/Decisions/2026-05-06 — DS Team Takes Over Spider Labs Orphaned Projects.md (related_projects → [[Martin News Chatbot]])
+  - wiki/Entities/Projects/RCE-NG.md (related_projects → [[XDR Correlation for Phoenix]])
+  - wiki/Entities/Projects/UEBA (USMA).md (related_ideas → [[Rebuild UEBA in Phoenix XDR]])
+  - wiki/Entities/Projects/XDR Correlation for Phoenix.md (related_teams → [[Phoenix Team]])
+  - wiki/Entities/Teams/Data Science Team.md (related_teams → [[Spider Labs]])
+  - wiki/Meetings/2026-05-07 — Sigma Interoperability brownbag.md (related_projects → [[Detection Engineering Hub]])
+  - wiki/Entities/Projects/Incident Investigation (for Fusion 2).md (related_teams → [[Fusion 2 Team]])
+- orphaned-concept seeds (15 new pages, all referenced from INDEX.md):
+  - wiki/Entities/Concepts/Command and Control.md
+  - wiki/Entities/Concepts/Remote Access Trojan.md
+  - wiki/Entities/Concepts/Persistence.md
+  - wiki/Entities/Concepts/Local Security Authority.md
+  - wiki/Entities/Systems/Event Tracing for Windows.md
+  - wiki/Entities/Systems/Antimalware Scan Interface.md
+  - wiki/Entities/Concepts/Windows Management Instrumentation.md
+  - wiki/Research/Digital Forensics and Incident Response.md (first Research page)
+  - wiki/Entities/Concepts/Code Obfuscation.md
+  - wiki/Entities/Concepts/Remote Desktop Protocol.md
+  - wiki/Entities/Concepts/Master Boot Record.md
+  - wiki/Entities/Concepts/Credential Theft.md
+  - wiki/Entities/Systems/Active Directory.md
+  - wiki/Entities/Concepts/Privilege Escalation.md
+  - wiki/Entities/Concepts/Lateral Movement.md
+- wiki/INDEX.md (11 new Concept entries + 3 new System entries + 1 new Research entry + last_updated bump)
+- data gaps deferred (12 suggested external searches — Tipper owner/schema/SLA, Alert Logic ML scope/transfer feasibility, Phoenix UEBA arch, USMA→Phoenix timeline, Sigma 2.0 adoption, Sage scope, Langfuse deployment, RAG shared-stack, Anthropic prod policy).
 
 ## [2026-05-12] lint | deterministic clean + 6 cross-ref backfills
 - tools/lint/run_all baseline: 4 → 3 (1 stale-link fixed; 3 remaining orphans are structural pages INDEX/pulse/wiki-ops by design).
