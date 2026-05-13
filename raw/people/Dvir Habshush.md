@@ -1,0 +1,5 @@
+- Name: Dvir Habshush
+- Title: Analyst-Cyber Threat Intelligence
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Gal Romano]]

@@ -1,0 +1,5 @@
+- Name: Gal Romano
+- Title: Threat Intel Team Lead
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Ziv Mador]]

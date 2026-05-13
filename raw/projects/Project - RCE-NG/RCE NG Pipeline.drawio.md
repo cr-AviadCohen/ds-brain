@@ -1,0 +1,130 @@
+# RCE NG Pipeline
+
+Source: `RCE NG Pipeline.drawio` (drawio)
+
+## Page: Page-1
+
+- Incoming event e
+- #1 Normalization & Enrichment
+- UDM
+- Unified Data Management(Phoenix Sceme)
+- IDM
+- Identity Management
+- #2 Detections (only) Ingest Pipeline
+- OpalMonitoring
+- (rules)&DROOL
+- (MITRE+Severity)
+- ACE
+- (MITRE)
+- EntityFieldExtraction
+- Detected enriched event e:-1 MITRE tactic + technique
+- - severity:	evidence / suspicion 	(null is left out)
+- X hours sliding window
+- (materialized views- Tony)
+- Event DB
+- Correlation DB
+- #3 Correlation Logic
+- Enriched event e is added to the Events DB for future correlations.Events DB is being searched for relevant correlation potential events to create a correlation potential group (by shared identities).Correlation DB is being searched for relevant previously correlated events groups containing Event e.
+- Events & Correlation DBs are implemented in Graph Database where nodes represent events, edges represent correlation.
+- + Event e
+- Event xIdentity shared with event e
+- Event ycounter 22
+- No shared identities with event e
+- Event zNo shared identities with event e
+- Correlation x, y
+- Correlation a, b
+- Correlation c, d
+- Known FP?
+- Yes
+- Known TP?
+- Additional filtering rules
+- Yes
+- Yes
+- Potential Correlation  Group:
+- No
+- No
+- New Correlation/s(Malop candidates)
+- Prompt constructing
+- No
+- LLM
+- New Correlations
+- No new Correlations
+- Add to database
+- Is this correlation
+- strong enough?
+- #4 Malop Worthy
+- Decision Gate
+- Enrich Malop with CR & community data
+- #5 Malop Enrichment
+- TriageInvestigation
+- Malop -> Customer UI
+- FP/TP == logic is wrong/correctred labs and trials are not FPs!!!
+- Yes
+- Filtering Gateway
+- patterns
+- No
+- Terminate
+- Terminate
+- Terminate
+- Terminate
+- Terminate
+- #3 Correlation Logic
+- Known FP?
+- Yes
+- Known TP?
+- Additional filtering rules
+- Yes
+- Yes
+- Potential Correlation  Group:
+- No
+- No
+- New Correlation/s(Malop candidates)
+- Prompt constructing
+- No
+- LLM
+- New Correlations
+- No new Correlations
+- TriageInvestigation
+- TP
+- FP/TP == logic is wrong/correctred labs and trials are not FPs!!!
+- Filtering Gateway
+- Terminate
+- Terminate
+- Terminate
+- FP
+- Queries for incidentGET
+- /v1/incident/{incident_id}
+- Fetch full incident details
+- Queries for Alerts in the IncidentGET
+- /v1/alert/{alert_id}
+- Fetch full alert details
+- Incident ID (or json?)POST
+- {base_url}/analyze
+- Cross Vendor ExpantionFor each key shared entity (IDM),Queries for Alerts across all vendors, in the defined time frame (maybe start with a strict 1 hour time window and then cleaver it up)GET
+- Extract pivot entities + define timeframe
+- From alerts + incident, extract:
+- hostnames / machine_iduser namesIPs (src/dst)file hashesdomains / URLsIf missing enrich via:
+- POST
+- /v1/evidence/find
+- By hostname / machine:
+- {  "observed_entities.machine_name": "host123",  "time_range": {    "from": "incident_start - Δ",    "to": "incident_end + Δ"  }}
+- By IP:
+- {  "observed_entities.ip": "1.2.3.4"}
+- By user:
+- {  "observed_entities.username": "alice"}
+- By hash:
+- {  "observed_entities.file_hash": "abc123"}
+- API:POST /v1/alert/find
+- Todo: Define this API- what is the best input and output for them?
+- POST /v1/alert/find{"incident_id": "",
+- "time_range":
+- {"from": "TIME_FROM", "to": "TIME_TO"}}
+- TIME_WINDOW = [incident_start - Δ , incident_end + Δ]Δ=12HTIME_FROM = incident_start - 12h
+- TIME_TO   = incident_end + 12h
+- #2 Data Preperation%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20parent%3D%221%22%20style%3D%22text%3BstrokeColor%3Dnone%3Balign%3Dcenter%3BfillColor%3Dnone%3Bhtml%3D1%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3BfontSize%3D13%3BstrokeWidth%3D1%3BfontStyle%3D1%22%20value%3D%22%26lt%3Bp%20style%3D%26quot%3Bmargin%3A%200px%3B%20font-variant-numeric%3A%20normal%3B%20font-variant-east-asian%3A%20normal%3B%20font-variant-alternates%3A%20normal%3B%20font-size-adjust%3A%20none%3B%20font-kerning%3A%20auto%3B%20font-optical-sizing%3A%20auto%3B%20font-feature-settings%3A%20normal%3B%20font-variation-settings%3A%20normal%3B%20font-variant-position%3A%20normal%3B%20font-variant-emoji%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2013px%3B%20line-height%3A%20normal%3B%26quot%3B%20class%3D%26quot%3Bp1%26quot%3B%26gt%3B%233%26amp%3Bnbsp%3B%26lt%3B%2Fp%26gt%3B%26lt%3Bp%20style%3D%26quot%3Bmargin%3A%200px%3B%20font-variant-numeric%3A%20normal%3B%20font-variant-east-asian%3A%20normal%3B%20font-variant-alternates%3A%20normal%3B%20font-size-adjust%3A%20none%3B%20font-kerning%3A%20auto%3B%20font-optical-sizing%3A%20auto%3B%20font-feature-settings%3A%20normal%3B%20font-variation-settings%3A%20normal%3B%20font-variant-position%3A%20normal%3B%20font-variant-emoji%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2013px%3B%20line-height%3A%20normal%3B%26quot%3B%20class%3D%26quot%3Bp1%26quot%3B%26gt%3B%26lt%3Bspan%20style%3D%26quot%3Bfont-size%3A%2013px%3B%20background-color%3A%20initial%3B%26quot%3B%26gt%3BCorrelation%20Logic%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fp%26gt%3B%22%20vertex%3D%221%22%3E%3CmxGeometry%20height%3D%2240%22%20width%3D%22930%22%20x%3D%221460%22%20y%3D%221430%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E
+- #1 Input Incident%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20parent%3D%221%22%20style%3D%22text%3BstrokeColor%3Dnone%3Balign%3Dcenter%3BfillColor%3Dnone%3Bhtml%3D1%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3BfontSize%3D13%3BstrokeWidth%3D1%3BfontStyle%3D1%22%20value%3D%22%26lt%3Bp%20style%3D%26quot%3Bmargin%3A%200px%3B%20font-variant-numeric%3A%20normal%3B%20font-variant-east-asian%3A%20normal%3B%20font-variant-alternates%3A%20normal%3B%20font-size-adjust%3A%20none%3B%20font-kerning%3A%20auto%3B%20font-optical-sizing%3A%20auto%3B%20font-feature-settings%3A%20normal%3B%20font-variation-settings%3A%20normal%3B%20font-variant-position%3A%20normal%3B%20font-variant-emoji%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2013px%3B%20line-height%3A%20normal%3B%26quot%3B%20class%3D%26quot%3Bp1%26quot%3B%26gt%3B%233%26amp%3Bnbsp%3B%26lt%3B%2Fp%26gt%3B%26lt%3Bp%20style%3D%26quot%3Bmargin%3A%200px%3B%20font-variant-numeric%3A%20normal%3B%20font-variant-east-asian%3A%20normal%3B%20font-variant-alternates%3A%20normal%3B%20font-size-adjust%3A%20none%3B%20font-kerning%3A%20auto%3B%20font-optical-sizing%3A%20auto%3B%20font-feature-settings%3A%20normal%3B%20font-variation-settings%3A%20normal%3B%20font-variant-position%3A%20normal%3B%20font-variant-emoji%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2013px%3B%20line-height%3A%20normal%3B%26quot%3B%20class%3D%26quot%3Bp1%26quot%3B%26gt%3B%26lt%3Bspan%20style%3D%26quot%3Bfont-size%3A%2013px%3B%20background-color%3A%20initial%3B%26quot%3B%26gt%3BCorrelation%20Logic%26lt%3B%2Fspan%26gt%3B%26lt%3B%2Fp%26gt%3B%22%20vertex%3D%221%22%3E%3CmxGeometry%20height%3D%2240%22%20width%3D%22930%22%20x%3D%221460%22%20y%3D%221430%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E
+
+---
+
+To regenerate visual: install drawio-desktop and run
+`drawio -x -f svg "RCE NG Pipeline.drawio"` then embed `![[RCE NG Pipeline.drawio.svg]]`.

@@ -1,0 +1,5 @@
+- Name: Itamar Hershko
+- Title: Security Researcher
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Inbar Dekel]]

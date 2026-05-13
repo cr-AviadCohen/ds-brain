@@ -1,0 +1,113 @@
+# MCP Server Design
+
+Source: `MCP Server Design.drawio` (drawio)
+
+## Page: Page-1
+
+- Client's AI
+- CR MCP Client(LLM Agent)
+- Hunt and Investigate
+- Respond to Malops
+- Remediate Items
+- Respond to Malware
+- CR MCP Server(custom FastAPI/Flask service)
+- Cybereason Platform
+- Gathers results from EDR data
+- collected from protected endpoints
+- User
+- The user’s LLM parses this request into a
+- structured representation for the MCP Client
+- "Find attempts to modify the firewall."
+- Free text query
+- This search will return processes like netsh firewall set ... or portproxy delete ...
+- Cybereason AI
+- API requests
+- MCP 1
+- Client
+- Cybereason
+- Other Vendors
+- MCP n
+- Tools
+- Matches request to tool:
+- Tool: hunt_shadow_deletion
+- {
+- "intent": "search_firewall_modification_attempts",
+- "query_context": {
+- "target_os": "Windows",
+- "relevant_tools": ["netsh.exe", "powershell.exe"],
+- "command_keywords": ["firewall", "portproxy", "set", "add", "delete"],
+- "behavior_type": "network_configuration_change",
+- "time_range": "last_24_hours"
+- },
+- "org_id": "acme.corp"
+- }
+- The MCP Client adds metadata
+- and sends it to the MCP Server
+- {
+- "request_id": "fb1de70e-493c-4ff9-ae5f-e3b34b4505a9",
+- "timestamp": 1716682602.981,
+- "user_query": "Find attempts to modify the firewall.",
+- "llm_output": {
+- "intent": "search_firewall_modification_attempts",
+- "query_context": {
+- "target_os": "Windows",
+- "relevant_tools": ["netsh.exe", "powershell.exe"],
+- "command_keywords": ["firewall", "portproxy", "set", "add", "delete"],
+- "behavior_type": "network_configuration_change",
+- "time_range": "last_24_hours"
+- },
+- "org_id": "acme.corp"
+- },
+- "user_context": {
+- "role": "analyst",
+- "org_id": "acme.corp"
+- }
+- }
+- 1. Parses the intent and query_context.
+- 2. Detects this is a network configuration change involving netsh.exe and firewall commands.
+- 3. Routes the request to a tool
+- 4. Constructs the appropriate query using the extracted fields.
+- curl --request POST \
+- --url https://12.34.56.78/rest/visualsearch/query/simple \
+- --header 'Content-Type: application/json' \
+- --data '{
+- "queryPath": [
+- {
+- "requestedType": "Process",
+- "filters": [
+- {
+- "facetName": "calculatedName",
+- "values": ["netsh.exe"],
+- "filterType": "ContainsIgnoreCase"
+- },
+- {
+- "facetName": "commandLine",
+- "values": ["firewall", "portproxy", "add", "delete", "set"],
+- "filterType": "ContainsIgnoreCase"
+- }
+- ],
+- "isResult": true
+- }
+- ],
+- "totalResultLimit": 1000,
+- "perGroupLimit": 100,
+- "perFeatureLimit": 100,
+- "templateContext": "SPECIFIC",
+- "queryTimeout": 120000,
+- "customFields": [
+- "elementDisplayName",
+- "commandLine",
+- "parentProcess",
+- "calculatedUser",
+- "ransomwareAutoRemediationSuspended",
+- "executionPrevented",
+- "creationTime",
+- "endTime"
+- ]
+- }'
+- {  "summary": "Found 5 attempts to modify the firewall using 'netsh.exe' or related tools in the last 24 hours.",  "details": [    {      "hostname": "WIN-438X92",      "user": "admin1",      "commandLine": "netsh firewall set opmode disable",      "parentProcess": "powershell.exe",      "timestamp": "2025-05-25T14:17:31Z"    },    ...  ]}
+
+---
+
+To regenerate visual: install drawio-desktop and run
+`drawio -x -f svg "MCP Server Design.drawio"` then embed `![[MCP Server Design.drawio.svg]]`.

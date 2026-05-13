@@ -1,0 +1,5 @@
+- Name: Karl Biron
+- Title: Security Researcher
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Jose Tozo]]

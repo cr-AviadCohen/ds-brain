@@ -1,0 +1,45 @@
+SLR Brownbag Session Series - (will be recorded)-20260507_113205-Meeting Recording
+May 7, 2026, 8:32AM
+57m 50s
+
+The May 7, 2026, SLR Brownbag session, hosted by Ziv Mador, focused on a highly collaborative initiative called the **"Sigma Interoperability"** project. Presented primarily by Itamar Hershko from the AI Research (AIR) team alongside Santi, the project aims to streamline threat detection engineering across multiple platforms.
+
+Here is a comprehensive and detailed summary of the meeting, divided into key topics:
+
+### **The Problem and Core Vision**
+Santi outlined the primary motivation for the project: the newly formed "Level Blue" organization manages multiple distinct SIEM and MDR platforms, including Fusion, USM Anywhere (USMA), Phoenix, Core, and Alert Logic. Previously, individual teams were duplicating efforts—each reading the same threat intelligence reports, investigating incidents, and manually writing custom detection rules for their specific platforms.
+To solve this, the teams collaborated to create a unified pipeline that uses **Sigma** as a common, standardized language for detection rules. This allows a single detection opportunity to be automatically translated into the specific syntax required by every platform.
+
+### **The Tipper Pipeline**
+The Sigma Interoperability tool is integrated into a broader intelligence pipeline known as **Tipper**.
+*   **Data Ingestion:** Tipper monitors around 200 sources (via RSS, Google APIs) for threat intelligence, campaigns, and Indicators of Compromise (IOCs). It also accepts manual submissions and is planned to ingest DFIR reports and telemetry from the fleet.
+*   **Intelligence Extraction:** Using machine learning and LLMs, Tipper identifies adversary Tactics, Techniques, and Procedures (TTPs) and creates "detection opportunities".
+*   **Outputs:** These opportunities are formulated into a Sigma proposal. The pipeline outputs to two distinct destinations:
+    1.  **Tipper (Internal):** Used by the SpiderLabs Research (SLR) team to speed up detection QA across platforms.
+    2.  **Martin News (Company-wide):** A knowledge base where salespeople can answer customer queries about specific threat coverage, and threat hunters can automatically extract hunting queries for multiple platforms (e.g., Splunk, SentinelOne) to run via systems like Inigo.
+
+### **System Architecture and Operational Tracks**
+Itamar explained that the Sigma Interop system is highly flexible and operates across three main tracks:
+*   **Track 1 (Automated Pipeline):** Ingests raw threat reports and detection logic steps from Tipper, automatically generates a Sigma rule, and translates it to various SIEM platforms before the next analyst shift.
+*   **Track 2 (Sigma Adaptation):** Allows researchers to ingest pre-existing Sigma rules found in community forums or platforms like VirusTotal. The system validates the rule and translates it into the organization's required formats without manual rewriting.
+*   **Track 3 (SIEM Migration):** Enables bi-directional translation. A user can input a query from an existing platform (like Splunk), convert it back into the common Sigma language, and then translate it into a different platform (like Fusion).
+
+### **Translation Mechanisms and AI Fallback**
+To execute the translations, the system prioritizes deterministic, code-based tools but relies on AI when necessary:
+*   **Sigma HQ:** The primary conversion engine is a local deployment of the official `Sigma HQ` Python package, which natively supports translations for Splunk, Sentinel, Elastic, and others. A custom mapping for Fusion was also built on top of this.
+*   **LLM Fallback:** If Sigma HQ fails to convert a rule, or if a platform lacks a direct mapping in the package (such as USMA), the system uses a Large Language Model (LLM) as a fallback. The LLM leverages Retrieval-Augmented Generation (RAG) and specific schema documentation (e.g., USMA operators like "mute" logic) to successfully generate the translated rule.
+
+### **Validation, QA, and Duplicate Prevention**
+A major challenge in detection engineering is false positives and redundant rules. The project addresses this through several automated checks:
+*   **RAG for Deduplication:** The system uses a local vector store (Chroma) to compare newly generated rules against existing ones. If a new rule has a similarity vector score above 0.55 compared to an existing rule, the system flags it to prevent duplicates.
+*   **Multi-layer LLM Validation:** Once a rule is drafted, the LLM agent runs it through a strict checklist (checking syntax, field placement, metadata, and platform applicability). If the rule fails any check, the system automatically loops up to three times to fix the errors before finalizing the rule.
+*   **Observability:** The team uses Langfuse to monitor the AI agents' back-end processes, visualize the RAG embeddings, and track why specific validation steps passed or failed.
+
+### **Future Steps and Deployment Strategy**
+*   **AWS Deployment:** The immediate next step is to deploy the source code on an AWS server prepared by Pawel. This will allow the team to perform live API handshakes and test the system with production traffic.
+*   **Template Generation vs. Full Automation:** Santi stressed that the system is currently designed to generate high-quality "templates" rather than pushing rules directly to production end-to-end. The goal is to reduce a 3-to-5 hour manual task down to 5 minutes by giving analysts the source context and a ready-made template to fine-tune. Once an analyst perfects a rule for one platform (e.g., Phoenix), the system instantly replicates that expertise across all other platforms.
+
+### **Conclusion**
+Ziv wrapped up the meeting by highlighting the project's significance for the newly unified organization. He noted that just a few months prior, the team consisted of four separate entities with proprietary languages and disconnected workflows. This tool successfully combined Tipper from Santi's team, Sigma mapping from Pawel's team, Phoenix schemas from Way, and AI automation from Itamar's team to create a highly efficient, shared resource.
+
+Ziv also announced that the next brownbag session would cover the **Infrastructure of Interest (IOI)** project.

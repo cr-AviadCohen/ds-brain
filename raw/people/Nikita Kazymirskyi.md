@@ -1,0 +1,5 @@
+- Name: Nikita Kazymirskyi
+- Title: Sr Security Researcher
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Gal Romano]]

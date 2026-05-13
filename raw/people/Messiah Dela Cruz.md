@@ -1,0 +1,5 @@
+- Name: Messiah Dela Cruz
+- Title: Sr Security Researcher
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Pawel Knapczyk]]

@@ -1,0 +1,54 @@
+Meeting
+data: 2026-05-12 11:00 AM
+location: MS Teams
+Participants: Aviad Cohen, Jose Manuel Martin Rodriguez
+
+**Meeting Objective and Professional Backgrounds**
+The meeting served as an introduction between Aviad (AI Architect) and Jose (Security/Development Expert) to discuss their backgrounds, current projects, and potential areas of collaboration.
+
+**Aviad**
+detailed his 13 years of experience in cybersecurity research utilizing machine learning and AI.
+Aviad detailed his 13 years of experience in cybersecurity research utilizing machine learning and AI.
+He holds a PhD in Software and Information Systems engineering with a focus on detecting malicious emails and non-executable attachments like PDFs and Office files.
+Aviad spent five years at IBM Research building anomaly detection for network traffic and an AI assistant for QRadar, IBM’s SIEM solution.
+He is currently the AI Architect at Cybereason.
+He previously led the data science team for seven months while his manager, Inbar, was on maternity leave.
+Aviad emphasized that his core strength is the intersection of ML and cybersecurity.
+He specifically noted that he left IBM Research because he was frustrated with spending years on academic-style research that never reached production.
+He is highly motivated to build impactful, practical tools rapidly rather than just publishing papers.
+
+**Jose**
+shared that he has a 5-year Telecommunications Engineering degree from Spain, which focused on digital communications, entropy, and information compression.
+He started his career doing software development for Telefonica before earning a Master's in Cybersecurity.
+For the past 10 years, he has been with the company (formerly AlienVault, then AT&T, now LevelBlue), writing correlation rules and Suricata signatures for the USM (Unified Security Management) platform.
+Recently, **Jose has acted as a domain expert, building datasets and translating cybersecurity concepts for pure data scientists** who lacked security backgrounds.
+
+**Current Priority: The Martin News Chatbot and Infrastructure**
+A primary focus of the meeting was the development of an AI chatbot for "Martin News".
+Jose explained that they currently have a basic proof-of-concept utilizing a knowledge base and MCP,
+but **they need Aviad's team to transform this into a full,
+production-ready application** to be used across the company by the NDR team, threat hunters, and researchers.
+
+Aviad mentioned that his team (specifically Guy) is preparing to explore the Martin News APIs and AWS Bedrock to build this assistant.
+This led to a discussion on infrastructure.
+**Jose expressed a strong dislike for AWS, citing its high costs and overly restrictive, scoped environment** that makes communicating from the outside in difficult.
+He suggested that cheaper, non-AWS deployments are easier to interconnect, but ultimately gave Aviad's team complete ownership to choose the platform.
+Aviad responded that while simple Docker containers work for proofs-of-concept, robust platforms like AWS are usually necessary for production, though they will carefully evaluate its limitations before deciding.
+
+**The UEBA Challenge (User and Entity Behavior Analytics)**
+They extensively discussed UEBA systems.
+Jose had previously worked on an unsupervised machine learning UBA solution for USM (USMA) to detect anomalous logins, exfiltrations, and lateral movements.
+However, **the UEBA project was completely abandoned roughly two years ago** due to severe staff turnover, including the loss of the AT&T data science team and subsequent newly-hired data scientists leaving the company.
+The abandoned system currently generates highly noisy alarms and customer complaints.
+
+Jose believes they desperately need to rebuild this capability or buy a competitor's solution (like SentinelOne or IBM). Aviad noted that his team also lost a key engineer who worked on UEBA during recent layoffs.
+Aviad suggested that **UEBA could be a potential future collaboration project integrated into the new Phoenix XDR platform**, though he cautioned that the XDR is still a long way from being fully functional.
+
+**Operational Bottlenecks and Strategic Scopes**
+Both discussed the severe lack of available engineering resources to productize their AI models.
+Aviad noted that **his AI projects (like the AI assistant and IRCA) are currently blocked because Phoenix engineering is at full capacity** and cannot integrate them.
+Similarly, Jose stated that **Level Blue engineering has suffered massive layoffs and is strictly focused on maintaining the legacy USMA platform** (USM Anywhere) until the migration to Phoenix is complete, meaning they cannot assist with new AI deployments.
+
+To navigate this, Jose outlined three target scopes for future projects: tools for end-customers (which requires heavy engineering),
+internal tools for the team's own research, and internal tools for other company departments like MDR, hunters, and sales.
+Aviad expressed a desire to focus on projects that deliver the highest visible impact to upper management (like Ziv), to prove the business value of the AI team.

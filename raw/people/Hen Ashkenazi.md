@@ -1,0 +1,5 @@
+- Name: Hen Ashkenazi
+- Title: Endpoint Detection Engineering Team Lead
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Ziv Mador]]

@@ -1,0 +1,5 @@
+- Name: Pawel Knapczyk
+- Title: Security Research Manager
+- Org: Security Research
+- Location: Warsaw Office
+- Manager: [[Ziv Mador]]

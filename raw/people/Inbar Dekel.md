@@ -1,0 +1,5 @@
+- Name: Inbar Dekel
+- Title: Data Science Team Lead
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Ziv Mador]]

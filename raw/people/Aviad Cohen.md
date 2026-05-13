@@ -1,0 +1,5 @@
+- Name: Aviad Cohen
+- Title: Principal AI Architect
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Inbar Dekel]]

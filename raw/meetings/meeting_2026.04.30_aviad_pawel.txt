@@ -1,0 +1,19 @@
+- Meeting Date: April 28, 2026
+- Attendees: [[Aviad Cohen]], [[Pawel Knapczyk]]
+
+## Meeting Summary
+* Introductions and Professional Backgrounds
+* Pawel’s Broad Security Journey: Pawel shared his extensive cybersecurity background:
+    * ESET: Spent 8 years doing reverse engineering, generic malware detections, and working on early ML classification systems around 2014.
+    * Acronis: Focused on ransomware behavioral detections and significantly improved their ML engine by fixing how it extracted features from compiled C files and handled obfuscation.
+    * ABB: Worked as a threat hunter dealing with real-world, broad incidents, such as attackers compromising factory networks via poorly protected IoT devices.
+    * Trustwave (Current): For the past 4 years, Pawel has led the Managed Threat Research (MTR) team. He initially dealt with optimizing detections for "Fusion" (a SIEM platform), which had an engine so fragile that poorly ordered detection rules could crash the whole stack for hours. He also authored popular threat intelligence blogs, including deep dives into the Sandworm APT's wiper attacks on Ukrainian telecom and water treatment infrastructure.
+
+Shared Technical Roadblocks: The Identity Management Problem A significant portion of the meeting revolved around a shared technical challenge. Pawel previously led an AI team working on a project called "Correlate ML", which attempted to correlate threat data across different vendors over time using pivot fields like IP addresses and usernames. However, the project struggled because it is nearly impossible to correlate this data reliably without a unified Identity Management system across their 4,000 clients. You strongly resonated with this, noting that your team is facing the exact same roadblock while trying to correlate attack stories for the Phoenix XDR project.
+Current AI Projects and Challenges Pawel is actively incorporating AI into his team's workflows but faces limitations that your team could help solve:
+* Hunter AI Agent: Pawel maintains an internal GenAI tool called "Hunter" (based on Anthropic's Claude) used by analysts to query Fusion data. His main struggle is optimizing the prompt to accurately search for related incidents without the model hallucinating data (such as faking VirusTotal calls or inventing incident IDs).
+* Automated IDS Signatures: Pawel's team uses Hunter via API to automatically generate Suricata IDS rules from vulnerability inputs (like Nuclei templates). You suggested that instead of relying on a single prompt, you could help them implement an agentic workflow that automatically validates and checks the LLM's output before returning the signature to the user.
+* Development Tools: Pawel currently relies on the Claude web UI for coding assistance and is waiting for a Cursor license. You highly recommended Cursor, noting that your team (especially Itamar) uses it heavily to burn through tokens and accelerate development.
+Next Steps and Potential Collaborations
+* Integrating AI Architectures: You proposed sharing your team's more advanced, multi-agent AI assistant architecture with Pawel. Once VPN and access issues are resolved, you could hook his specific tools into your orchestrator, allowing Claude to dynamically select the right agents for his team's tasks.
+* The Alert Logic ML Pipeline: Pawel invited you to an upcoming "Brownbag" session regarding a machine learning pipeline used by the Alert Logic team to review logs and detect anomalies for compliance reasons. This pipeline runs completely autonomously but hasn't been tuned in over a year. Pawel noted there are high-level discussions (involving Ziv Mador and Keith) about potentially integrating this exact pipeline into Phoenix, which could be a prime project for your team to take over or improve.

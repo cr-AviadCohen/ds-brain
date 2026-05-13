@@ -1,0 +1,170 @@
+{
+  "collapse-filter": false,
+  "search": "-tag:#index -tag:#log -tag:#moc -tag:#readme -tag:#claude -path:\"raw\" -path:\"INBOX\"",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": false,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:\"wiki/Entities/People\"",
+      "color": {
+        "a": 1,
+        "rgb": 16747586
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Teams\"",
+      "color": {
+        "a": 1,
+        "rgb": 15035690
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Organizations\"",
+      "color": {
+        "a": 1,
+        "rgb": 15776839
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Projects\"",
+      "color": {
+        "a": 1,
+        "rgb": 15158332
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Systems\"",
+      "color": {
+        "a": 1,
+        "rgb": 7102695
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Concepts\"",
+      "color": {
+        "a": 1,
+        "rgb": 1483397
+      }
+    },
+    {
+      "query": "path:\"wiki/Entities/Locations\"",
+      "color": {
+        "a": 1,
+        "rgb": 9334867
+      }
+    },
+    {
+      "query": "path:\"wiki/Meetings\"",
+      "color": {
+        "a": 1,
+        "rgb": 3447003
+      }
+    },
+    {
+      "query": "path:\"wiki/Decisions\"",
+      "color": {
+        "a": 1,
+        "rgb": 2900824
+      }
+    },
+    {
+      "query": "path:\"wiki/Ideas\"",
+      "color": {
+        "a": 1,
+        "rgb": 11067491
+      }
+    },
+    {
+      "query": "path:\"wiki/Connections\"",
+      "color": {
+        "a": 1,
+        "rgb": 15278179
+      }
+    },
+    {
+      "query": "path:\"wiki/Research\"",
+      "color": {
+        "a": 1,
+        "rgb": 2603616
+      }
+    },
+    {
+      "query": "path:\"wiki/Sources\"",
+      "color": {
+        "a": 1,
+        "rgb": 1752220
+      }
+    },
+    {
+      "query": "path:\"wiki/Syntheses\"",
+      "color": {
+        "a": 1,
+        "rgb": 10183094
+      }
+    },
+    {
+      "query": "path:\"wiki/Memories\"",
+      "color": {
+        "a": 1,
+        "rgb": 13935988
+      }
+    },
+    {
+      "query": "path:\"wiki/🔥 Hot Notes\"",
+      "color": {
+        "a": 1,
+        "rgb": 16718660
+      }
+    },
+    {
+      "query": "path:\"wiki/🗺️ Maps\"",
+      "color": {
+        "a": 1,
+        "rgb": 9803686
+      }
+    },
+    {
+      "query": "path:\"wiki/📦 Archive\"",
+      "color": {
+        "a": 1,
+        "rgb": 8358029
+      }
+    },
+    {
+      "query": "path:\"wiki/Log\" file:INDEX",
+      "color": {
+        "a": 1,
+        "rgb": 16776960
+      }
+    },
+    {
+      "query": "path:\"wiki/Log\" -file:INDEX",
+      "color": {
+        "a": 1,
+        "rgb": 3426654
+      }
+    },
+    {
+      "query": "tag:#readme",
+      "color": {
+        "a": 1,
+        "rgb": 12434887
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 0.79215745404491,
+  "close": false
+}

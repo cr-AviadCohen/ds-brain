@@ -1,0 +1,5 @@
+- Name: Winston Poniente
+- Title: Engineer-Cyber Threat
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Gal Romano]]

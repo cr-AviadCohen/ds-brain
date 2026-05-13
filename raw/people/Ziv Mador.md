@@ -1,0 +1,5 @@
+- Name: Ziv Mador
+- Title: VP-Security Research
+- Org: Security Research
+- Location: Tel-Aviv
+- Manager: [[Keith Ibarguen]]

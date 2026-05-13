@@ -1,0 +1,5 @@
+- Name: Bernard Bautista
+- Title: Security Researcher
+- Org: Security Research
+- Location: New Zealand
+- Manager: [[Phil Hay]]

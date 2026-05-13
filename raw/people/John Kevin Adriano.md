@@ -1,0 +1,5 @@
+- Name: John Kevin Adriano
+- Title: Security Researcher
+- Org: Security Research
+- Location: New Zealand
+- Manager: [[Phil Hay]]

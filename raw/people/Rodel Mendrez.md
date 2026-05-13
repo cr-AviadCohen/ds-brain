@@ -1,0 +1,5 @@
+- Name: Rodel Mendrez
+- Title: Principal Security Researcher
+- Org: Security Research
+- Location: New Zealand
+- Manager: [[Phil Hay]]

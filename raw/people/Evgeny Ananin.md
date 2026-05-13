@@ -1,0 +1,5 @@
+- Name: Evgeny Ananin
+- Title: Sr Analyst-Cyber Threat Intelligence
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Gal Romano]]

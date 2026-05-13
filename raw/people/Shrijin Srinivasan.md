@@ -1,0 +1,5 @@
+- Name: Shrijin Srinivasan
+- Title: Sr Security Researcher
+- Org: Security Research
+- Location: Waterloo Office
+- Manager: [[Jose Tozo]]

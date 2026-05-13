@@ -1,0 +1,5 @@
+- Name: Jose Tozo
+- Title: Sr Security Researcher
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Ziv Mador]]

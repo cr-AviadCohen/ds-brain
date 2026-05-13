@@ -1,0 +1,5 @@
+- Name: Karla Agregado
+- Title: Security Researcher
+- Org: Security Research
+- Location: New Zealand
+- Manager: [[Phil Hay]]

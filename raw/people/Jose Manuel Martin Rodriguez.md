@@ -1,0 +1,5 @@
+- Name: Jose Manuel Martin Rodriguez
+- Title: Lead Cybersecurity
+- Org: Labs
+- Location: Spain
+- Manager: [[Santiago Cortes Diaz]]

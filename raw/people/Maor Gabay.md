@@ -1,0 +1,5 @@
+- Name: Maor Gabay
+- Title: Security Analyst
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Hen Ashkenazi]]

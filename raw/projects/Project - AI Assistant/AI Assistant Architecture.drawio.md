@@ -1,0 +1,816 @@
+# AI Assistant Architecture
+
+Source: `AI Assistant Architecture.drawio` (drawio)
+
+## Page: High-Level
+
+- Submission
+- AI Assistant
+- Cybereason
+- API
+- UI
+- IRCA
+- MCP
+- AI Assistant Architecture
+- INPUT
+- INVESTIGATIONAGENT
+- 2 TOOLS
+- CR API
+- AGENT
+- 105 TOOLS
+- AGENT
+- TOOLS
+- UI
+- AGENT
+- 25 TOOLS
+- DETECTION RULE AGENT
+- 9 TOOLS
+- USER
+- ORCHESTRATOR
+- AGENT
+- GUARDRAILS
+- Cybereason
+- API
+- VIRUSTOTAL
+- AGENT
+- 7 TOOLS
+- CVE
+- AGENT
+- 5 TOOLS
+- MITRE ATT&CK
+- AGENT
+- 25 TOOLS
+- MITRE D3FEND
+- AGENT
+- 15 TOOLS
+- MITRE CWE
+- AGENT
+- 25 TOOLS
+- MITRE CAPEC
+- AGENT
+- 27 TOOLS
+- EPSS
+- AGENT
+- 3 TOOLS
+- GH ADVISORY
+- AGENT
+- 4 TOOLS
+- ALIENVALUT OTX
+- AGENT
+- 12 TOOLS
+- ABUSE.CH
+- AGENT
+- 17 TOOLS
+- ABUSE.IPDBAGENT
+- 7 TOOLS
+- HUNT & INVESTIGATEAGENT
+- 9 TOOLS
+- RESPOND TO MALOPAGENT
+- 19 TOOLS
+- MANAGE REPUTATIONAGENT
+- 4 TOOLS
+- MANAGE SENSORSAGENT
+- 31 TOOLS
+- MACHINE ISOLATIONAGENT
+- 4 TOOLS
+- MANAGE USERSAGENT
+- 4 TOOLS
+- VUL-MANAGENT
+- 6 TOOLS
+- IR & FORENSICAGENT
+- 9 TOOLS
+- SHODANAGENT
+- 6 TOOLS
+- CENSYS
+- AGENT
+- 16 TOOLS
+- CERT TRANSPARENCY
+- AGENT
+- 3 TOOLS
+- GREY NOISE
+- AGENT
+- 6 TOOLS
+- OPEN PHISH
+- AGENT
+- 5 TOOLS
+- PULSE DIVEAGENT
+- 11 TOOLS
+- SECURITY TRAILSAGENT
+- 17 TOOLS
+- RESPOND MALWARE AGENT
+- 2 TOOLS
+- REMEDIATIONAGENT
+- 4 TOOLS
+- SPAMHAUSAGENT
+- 8 TOOLS
+- URL SCAN
+- AGENT
+- 6 TOOLS
+- OPEN CTIAGENT
+- 35 TOOLS
+- INPUT
+- DECISION
+- ORCHESTRATOR
+- AGENT
+- GUARDRAILS
+- AGENT
+- TOOLS
+- AGENT
+- TOOLS
+- AGENT
+- TOOLS
+- AGENT
+- TOOLS
+- AI Assistant High-Level Architecture
+- OUTPUT
+- API
+- TRACING
+- AI ASSISTANT
+- CONFIG FILE
+- THREAT INTEL
+- AGENT
+- 12 TOOLS
+- OTX AlienVault
+- INPUT
+- DECISION
+- ORCHESTRATOR
+- AGENT
+- GUARDRAILS
+- AI Assistant Architecture
+- OUTPUT
+- MONITORING
+- AI ASSISTANT
+- CONFIG FILE
+- z
+- Cybereason(LevelBlue)
+- Threat Intel
+- OTX AlienVault
+- Knowledge Frameworks
+- Suggestion (Inbar)
+- APIs
+- Inner Logic
+- (120)
+- (17)
+- (4)
+- Agents
+- Tools
+- Threat Intelligence
+
+## Page: Detailed
+
+- USER
+- Orchestrator
+- Langraph Agentic Workflow
+- System Initialization
+- Langfuse
+- Guardrails
+- 1.LOAD CONFIG(Orc+Guardrails)
+- 3. USER AUTH CR
+- 2. LOAD ENV
+- 4. API:
+- User permission +server version
+- 6. INITIALIZE AGENTS
+- 7,INITIALIZE GUARDRAILS
+- 5. INITIALIZE ORCHESTRATOR
+- 8. INITIALIZE LANGFUSE
+- Compute EmbeddingQuery
+- Search All Categoriesk-NN Similarity Search
+- BlocklistScore: X
+- Conversational AllowlistScore: Y
+- Tool AllowlistScore: Z
+- Find Best MatchHighest Score Wins
+- Best Match
+- Category?
+- Score ≥ 0.30?
+- Score ≥ 0.25?
+- 🚫 BLOCKHigh Confidence
+- 🚫 BLOCKAmbiguous
+- ✅ ALLOWConversational Match
+- Return BlockedBLOCKING_MESSAGE
+- Return AllowedProceed to Agent
+- analyze_request(LLM Call #1)
+- select_agent(Deterministic)
+- execute_agent
+- Yes
+- Multi-Agent?
+- combine_results
+- LLM Reasoning +
+- Select Tool
+- (LLM Call #1N)
+- Select Tool(LLM Call #1N)
+- Execute Tool
+- Process Result(LLM Call #2N)
+- More Tools?
+- (LLM Call #2N)
+- Format Response(LLM Call #2N)
+- Validate Params
+- Check Permissions
+- Check Version
+- API Request
+- Parse Response
+- Blocklist
+- AllowlistTool / Conversational
+- NO
+- NO
+- YES
+- YES
+- No
+- No
+- QUERY IN CONTEXT
+- QUERY OUT OF CONTEXT
+- AgentReAct Langchain
+- Tool
+- USER QUERY
+- LLM Calls= 2NN- Number of Tools
+- No LLM Calls
+- Orchestrator
+- Langraph Agentic Workflow
+- analyze_request(LLM Call #1)
+- select_agent(Routing)
+- Execute
+- Agent
+- Yes
+- Multi-Agent?
+- Format
+- Response
+- LLM Reasoning +
+- Select Tool
+- (LLM Call #2)
+- Execute
+- Tool
+- Process
+- Result(LLM Call #3)
+- Yes
+- More Tools?
+- Format
+- Response
+- Validate Params
+- Check Permissions
+- Check Version
+- API Request
+- Parse Response
+- No
+- Tool response + History
+- No
+- AgentReAct Langchain
+- Tool
+- LLM Calls= 2NN- Number of Tools
+- No LLM Calls
+- USER
+- Response
+- Input Query
+- 1. Load Configuration (guardrails_config.yaml)          │  │ │  2. Extract Allowlist from Tools (195+ tools)            │  │
+- │  │  3. Load Embedding Model (SentenceTransformer)           │  │
+- │  │  4. Pre-compute Embeddings (blocklist, allowlists)
+
+## Page: Flow Chart
+
+- 🛠️ TOOL EXECUTION
+- Validate Params
+- Check Permissions
+- Check Version
+- API Request
+- Parse Response
+- 🤖 REACT AGENT
+- LLM Reasoning
+- Select Tool
+- Execute Tool
+- Process Result
+- More Tools?
+- Format Response
+- Yes
+- No
+- 🎯 ORCHESTRATOR WORKFLOW
+- analyze_request
+- LLM Call
+- select_agent
+- Deterministic
+- execute_agent
+- Multi-Agent?
+- combine_results
+- Yes
+- No
+- 📥 REQUEST PROCESSING
+- User Query
+- Guardrails Check
+- Return Error
+- Orchestrator LangGraph
+- Blocked
+- Allowed
+- 🔧 INITIALIZATION PHASE
+- Load Config
+- Authenticate
+- Cache Permissions
+- Cache Version
+- Init Guardrails
+- Create 35+ Agents
+- Create Orchestrator
+- Return Response
+
+## Page: User Workflow
+
+- User
+- Orchestrator
+- Guardrails
+- CR Investigation Agent
+- VirusTotal Agent
+- Langfuse
+- loop
+- [For each
+- IOC]
+- "Investigate MalOp 12345
+- and enrich IOCs"
+- Create Session
+- Validate Input
+- ALLOWED
+- analyze_request (LLM)
+- select_agent
+- Execute Agent
+- ReAct: Reason → Act → Observe
+- Tool: Query MalOp
+- Extract IOCs
+- IOCs: [hash1, hash2, ip1]
+- check_multi_agent
+- select_agent (again)
+- Execute Agent
+- ReAct: Reason → Act → Observe
+- Tool: VirusTotal Scan
+- Enrich IOC
+- Enriched IOCs
+- check_multi_agent
+- combine_results
+- Flush Traces
+- Combined Response
+- Determines: [agent1, agent2]
+- Selects: agent1 (index 0)
+- More agents? YES
+- Selects: agent2 (index 1)
+- More agents? NO
+- Merge: Investigation + Threat Intel
+
+## Page: Guardrails
+
+- User Input
+- Compute Embedding
+- Sentence Transformer
+- BAAI/bge-small-en-v1.5
+- ~50ms
+- Search All Categories
+- K-NN Similarity Search
+- Blocklist
+- ~50 phrases
+- Score: X
+- Allowlist (Conversational)
+- ~20 phrases
+- Score: Y
+- Allowlist (Tools)
+- ~350 phrases
+- Score: Z
+- Find Best Match
+- Highest Score Wins
+- Best Match
+- Category?
+- Score ≥ 0.30?
+- 🚫 BLOCK
+- High Confidence
+- 🚫 BLOCK
+- Ambiguous
+- Score ≥ 0.25?
+- ✅ ALLOW
+- Conversational Match
+- Score ≥ 0.25?
+- Return Blocked
+- BLOCKING_MESSAGE
+- Return Allowed
+- Proceed to Agent
+- Blocklist
+- Yes
+- No
+- Allowlist
+- Conversational
+- Yes
+- No
+- Allowlist
+- Tool
+- Yes
+- No
+- Blocklist Similarity Score  > 0.35?
+- 🚫 BLOCK
+- High Confidence
+- 🚫 BLOCK
+- Ambiguous
+- Allowlist
+- Conversational
+- Similarity Score
+- ≥ 0.25?
+- Allowlist
+- Tools Similarity Score ≥ 0.25?
+- Return Blocked
+- BLOCKING_MESSAGE
+- Return Allowed
+- Proceed to Agent
+- Yes
+- No
+- Yes
+- No
+- Yes
+- No
+- ✅ ALLOW
+- Conversational Match
+- User Input
+- Compute Embedding
+- Sentence Transformer
+- BAAI/bge-small-en-v1.5
+- ~50ms
+- Compare to Blocklist and Allowlists
+
+## Page: Class Diagram
+
+- >
+- Agent
+- +name: str
+- +description: str
+- +system_prompt: str
+- +llm: LanguageModelLike
+- +tools: List
+- +category: str
+- +examples: List
+- +emoji: str
+- +capabilities: List
+- +guardrails: Guardrails
+- +custom_welcome_message: str
+- +cli: CLI
+- +conv_history: List
+- +invoke(input)
+- +_invoke(input)
+- +run_cli()
+- +welcome_message()
+- +get_tools_list_str()
+- +get_config()
+- +get_conv_history()
+- +save_conv_history(filepath)
+- >
+- Tool
+- +description: str
+- +parameters: Dict
+- +name: str
+- +type: str
+- +function()
+- +_run()
+- +run()
+- +get_config()
+- +convert(type)
+- +create_pydantic_model_from_schema(name, schema)
+- Agent_React_Langchain
+- +agent: CompiledStateGraph
+- +invoke_config: dict
+- +conv_memory_last_x_messages: int
+- +_invoke(input)
+- Orchestrator
+- +agents: List
+- +graph: StateGraph
+- +orchestrator_guardrails: Guardrails
+- +langfuse_enabled: bool
+- +langsmith_enabled: bool
+- +session_id: str
+- +user_id: str
+- +run()
+- +_invoke(input)
+- +_create_dynamic_graph()
+- +analyze_request_node()
+- +select_agent_node()
+- +_execute_agent_node()
+- +check_multi_agent_node()
+- +combine_results_node()
+- +visualize()
+- +submit_user_feedback()
+- Agent_React_Guardrails_Autonomous_PenTesting
+- +max_attempts: int
+- +results_dir: str
+- +attempts: List
+- +results: PenTestResults
+- >
+- CR_API_Agent
+- >
+- CR_Hunt_Investigate_Agent
+- >
+- CR_Respond_Malops_Agent
+- >
+- CR_Remediate_Agent
+- >
+- CR_Malware_Agent
+- >
+- CR_Reputations_Agent
+- >
+- CR_Threat_Intel_Agent
+- >
+- CR_Sensors_Agent
+- >
+- CR_Isolation_Agent
+- >
+- CR_IR_Forensics_Agent
+- >
+- CR_Users_Agent
+- >
+- CR_Vulnerability_Agent
+- >
+- CR_UI_Agent
+- >
+- CR_Investigation_Agent
+- >
+- CR_Custom_Rule_Agent
+- >
+- MITRE_ATTCK_Agent
+- >
+- MITRE_CWE_Agent
+- >
+- MITRE_CAPEC_Agent
+- >
+- MITRE_DEFEND_Agent
+- >
+- VirusTotal_Agent
+- >
+- OpenCTI_Agent
+- >
+- Censys_Agent
+- >
+- URLScan_Agent
+- >
+- Spamhaus_Agent
+- >
+- Shodan_Agent
+- >
+- SecurityTrails_Agent
+- >
+- Pulsedive_Agent
+- >
+- OpenPhish_Agent
+- >
+- GreyNoise_Agent
+- >
+- AbuseIPDB_Agent
+- >
+- AbuseCH_Agent
+- >
+- AlienVault_OTX_Agent
+- >
+- Cert_Transparency_Agent
+- >
+- EPSS_Agent
+- >
+- CVE_Agent
+- >
+- GitHub_Advisory_Agent
+- >
+- Tool_with_Rate_Limit
+- +delay_seconds: float
+- +last_request_time: float
+- +_enforce_rate_limit()
+- >
+- CR_API_Tool
+- +api_category: API_CATEGORY
+- +permissions: List
+- +investigation_priority: LEVEL
+- +complexity: LEVEL
+- +url: str
+- +min_version: MIN_VERSION
+- +make_api_request()
+- +get_user_variable()
+- >
+- CR_UI_Tool
+- +type: str
+- >
+- MITRE_ATTACK_Tool
+- +type: str
+- >
+- MITRE_CWE_Tool
+- +type: str
+- >
+- MITRE_CAPEC_Tool
+- +type: str
+- >
+- MITRE_DEFEND_Tool
+- +type: str
+- >
+- VirusTotal_Tool
+- >
+- OpenCTI_Tool
+- >
+- Censys_Tool
+- >
+- URLScan_Tool
+- >
+- Spamhaus_Tool
+- >
+- Shodan_Tool
+- >
+- SecurityTrails_Tool
+- >
+- Pulsedive_Tool
+- >
+- OpenPhish_Tool
+- >
+- GreyNoise_Tool
+- >
+- AbuseIPDB_Tool
+- >
+- AbuseCH_Tool
+- >
+- AlienVault_OTX_Tool
+- >
+- Cert_Transparency_Tool
+- >
+- EPSS_Tool
+- >
+- CVE_Tool
+- >
+- GitHub_Advisory_Tool
+- Orchestrator_Config
+- +config_file_path: str
+- +llm_config: Dict
+- +agents_config: Dict
+- +guardrails_config: Dict
+- +is_agent_enabled(agent_name)
+- +get_agent_model_id(agent_name)
+- >
+- Orchestrator_State
+- +messages: List
+- +current_step: str
+- +user_query: str
+- +session_id: str
+- +selected_agent_id: str
+- +agent_sequence: List
+- +agent_history: List
+- +final_response: str
+- Guardrails_Config
+- +config_file_path: str
+- +embeddings_model_id: str
+- +thresholds: Dict
+- +blocklist: List
+- +allowlist_conversational: List
+- Guardrails
+- +tools: List
+- +config: Guardrails_Config
+- +type: Guardrails_Type
+- +model: SentenceTransformer
+- +allowlist_tools: List
+- +validate_input(input)
+- +validate_output(output)
+- >
+- Guardrail_Decision
+- +is_allowed: bool
+- +reason: str
+- +category: Guardrail_Reason_Category
+- +score: float
+- +best_match_text: str
+- +guardrail_type: Guardrails_Type
+- StreamlitCommandAdapter
+- +cli: Orchestrator_CLI
+- +process_command(input)
+- Orchestrator_Benchmark
+- +orchestrator: Orchestrator
+- +config: Benchmark_Config
+- +run()
+- >
+- Tool_Conversion_Type
+- LANGGRAPH
+- AGNO
+- FASTMCP
+- >
+- Orchestrator_Step
+- START
+- WAITING_FOR_INPUT
+- REQUEST_ANALYZED
+- REQUEST_REJECTED
+- AGENT_SELECTED
+- ALL_AGENTS_COMPLETE
+- SINGLE_AGENT_COMPLETE
+- CONTINUE_MULTI_AGENT
+- MULTI_AGENT_COMPLETE
+- WORKFLOW_COMPLETE
+- BLOCKED_BY_GUARDRAILS
+- >
+- Workflow_Type
+- SINGLE_AGENT
+- MULTI_AGENT
+- REJECTED
+- BLOCKED
+- >
+- Routing_Decision
+- CONTINUE
+- COMBINE
+- MULTI_AGENT
+- COMPLETE
+- >
+- Guardrails_Type
+- NONE
+- INPUT
+- OUTPUT
+- BOTH
+- >
+- Guardrail_Reason_Category
+- BLOCKLIST
+- ALLOWLIST_CONVERSATIONAL
+- ALLOWLIST_TOOL
+- NONE
+- >
+- PERMISSION
+- ANALYST_L1
+- ANALYST_L2
+- ANALYST_L3
+- SYS_ADMIN
+- >
+- API_CATEGORY
+- HUNT_AND_INVESTIGATE
+- RESPOND_TO_MALOPS
+- REMEDIATE_ITEMS
+- MANAGE_SENSORS
+- extends
+- extends
+- extends
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- creates
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- extends
+- contains
+- 1
+- *
+- validates with
+- manages
+- 1
+- *
+- configures
+- uses
+- tracks
+- determines
+- routes with
+- validates with
+- config
+- produces
+- category
+- guardrail_type
+- permissions
+- api_category
+- uses
+- orchestrator
+
+---
+
+To regenerate visual: install drawio-desktop and run
+`drawio -x -f svg "AI Assistant Architecture.drawio"` then embed `![[AI Assistant Architecture.drawio.svg]]`.

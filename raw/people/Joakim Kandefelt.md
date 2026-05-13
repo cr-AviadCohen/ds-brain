@@ -1,0 +1,5 @@
+- Name: Joakim Kandefelt
+- Title: Team Lead-Blue Team
+- Org: Security Operations Center
+- Location: Tel-Aviv
+- Manager: [[Gal Romano]]

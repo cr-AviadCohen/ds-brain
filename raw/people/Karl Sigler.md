@@ -1,0 +1,5 @@
+- Name: Karl Sigler
+- Title: Sr Manager-Security Research
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Ziv Mador]]

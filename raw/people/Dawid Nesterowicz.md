@@ -1,0 +1,5 @@
+- Name: Dawid Nesterowicz
+- Title: Security Researcher
+- Org: Security Research
+- Location: Warsaw Office
+- Manager: [[Pawel Knapczyk]]

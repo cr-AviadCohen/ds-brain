@@ -1,0 +1,5 @@
+- Name: Rotem Rostami
+- Title: Detection Engineer
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Hen Ashkenazi]]

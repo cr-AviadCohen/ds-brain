@@ -1,0 +1,5 @@
+- Name: Guy Kassorla
+- Title: Data Engineer
+- Org: Engineering
+- Location: Tel-Aviv
+- Manager: [[Inbar Dekel]]

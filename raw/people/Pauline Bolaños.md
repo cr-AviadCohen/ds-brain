@@ -1,0 +1,5 @@
+- Name: Pauline Bolaños
+- Title: Security Content Researcher
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Karl Sigler]]

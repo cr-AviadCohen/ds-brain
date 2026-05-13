@@ -1,0 +1,5 @@
+- Name: Stuart Dunsmore
+- Title: Associate Manager-Security Research
+- Org: Security Research
+- Location: Remote Office
+- Manager: [[Pawel Knapczyk]]

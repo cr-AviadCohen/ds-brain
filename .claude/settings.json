@@ -1,0 +1,75 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git mv:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)",
+      "Bash(git push origin unified:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+      "Bash(mkdir -p wiki/*)",
+      "Bash(mkdir -p raw/*)",
+      "Bash(mkdir -p INBOX)",
+      "Bash(mkdir -p scripts/*)",
+      "Bash(mkdir -p tools/*)",
+      "Bash(mkdir -p docs/*)",
+      "Bash(chmod +x scripts/*:*)",
+      "Bash(chmod +x .claude/hooks/*:*)",
+      "Bash(uv venv:*)",
+      "Bash(uv pip:*)",
+      "Bash(uv run:*)",
+      "Bash(uv sync:*)",
+      "Bash(cd tools && uv run:*)",
+      "Bash(cd tools && .venv/bin/python -m lint.run_all)",
+      "Bash(cd tools && python -m lint.run_all)",
+      "Bash(claude -p:*)",
+      "Bash(python3 scripts/hooks/guard_immutable.py)",
+      "Bash(.claude/hooks/inbox-check.sh)"
+    ],
+    "deny": [
+      "Bash(git reset --hard:*)",
+      "Bash(git push --force:*)",
+      "Bash(rm -rf:*)",
+      "Bash(rm raw/*)",
+      "Bash(rm INBOX/*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/inbox-check.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/hooks/guard_immutable.py" }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/hooks/guard_immutable.py" }
+        ]
+      }
+    ]
+  }
+}

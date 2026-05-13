@@ -1,0 +1,47 @@
+SLR Brownbag Session Series
+Jan 29, 2026
+
+**Organizational Context and the Goal of the "Brownbag" Sessions**
+The meeting opens with an emphasis on cross-functional collaboration within the newly formed "Level Blue," an organization created by combining AT&T Cybersecurity (formerly AlienVault), Trustwave, SpiderLabs, and the recently announced acquisition of Alert Logic. The primary goal of these sessions is to break down silos, allowing different teams to understand each other's capabilities and find opportunities to collaborate on data, threat intelligence, tools, and research.
+
+**SLR Labs: Structure and Core Responsibilities**
+Santi, the main presenter, introduces the SLR Labs team, which originated from AlienVault. The team's operations are divided into three main pillars:
+1.  **Detection Engineering:** Responsible for creating the logic and rules for **USM Anywhere**, the company's core MDR/SIEM platform.
+2.  **Threat Intelligence Group:** Focused on research and awareness, identifying new campaigns, adversary tools, and TTPs (Tactics, Techniques, and Procedures).
+3.  **Engineering and Data Science:** Manages the backend systems and data pipelines that populate OTX (Open Threat Exchange) with threat intelligence, malware samples, and URLs.
+
+**Data Ingestion and Intelligence Sources**
+The team manages a massive intelligence pipeline to fuel its detection capabilities:
+*   **Open Source Intelligence (OSINT):** The team heavily relies on translating OSINT reports into actionable intelligence, such as OTX "Pulses" (bubbles of context containing metadata and indicators) and Jira tickets for new TTP detections.
+*   **Malware Exchange Partnerships:** The team exchanges approximately 50,000 malware samples daily with partners like Hybrid Analysis, Any.Run, and Emerging Threats. They utilize a custom fork of the Cuckoo/Cape sandbox that supports Linux and IoT architectures for dynamic analysis.
+*   **Infrastructure Telemetry:** They process massive amounts of structural data, including 300,000 daily Whois records, passive DNS resolutions, malicious URLs, and TLS certificates.
+
+**USM Anywhere and Detection Philosophy**
+**USM Anywhere** acts as the core MDR platform for legacy Level Blue customers, designed to correlate events across up to 800 supported integrations. Rather than alerting on isolated, atomic events, USM Anywhere is designed to detect sequences of events that translate into specific TTPs.
+
+To manage alert fatigue, the team categorizes alarms into two distinct buckets:
+*   **Contextual Alarms:** Low-priority events (e.g., a suspicious login) that are useful for enriching logs and context but do not require immediate manual review.
+*   **Investigation Leads:** High-priority alerts that confidently indicate a compromise and demand active investigation by an analyst.
+The team follows a strict "Test as Code" philosophy, ensuring all detections are tested and peer-reviewed via a centralized repository before dissemination.
+
+**Key Internal Tools and Capabilities**
+Santi detailed several proprietary tools and machine learning models developed to streamline operations:
+*   **Tipper:** An internal pipeline powered by LLMs designed to manage the OSINT triage process. It prevents duplicate work by ensuring analysts do not review the same reports, and it semi-automates the creation of OTX pulses and Jira tickets.
+*   **Martin News:** An internal-facing knowledge database used to generate threat briefings, PDF reports, and news updates for leadership, sales, and the MDR team.
+*   **Sauron:** An infrastructure correlation technology that mixes Whois, DNS, and IP geography data to identify malicious infrastructure.
+*   **OTX Domain Scoring:** The team utilizes an ML model called **Rat feeder** (currently being upgraded to a new model called **Themis**) to score the maliciousness of domains using historical data, URLs, and ASN data.
+
+**Strategic Shift: Tracking Payloads over Adversaries**
+A major highlight of the presentation is the team's shift away from tracking specific Advanced Persistent Threat (APT) groups. Because their customer base largely consists of Small and Medium Businesses (SMBs), they are rarely targeted by high-profile state actors. Instead, the team now focuses on **tracking payloads** such as Cobalt Strike, info stealers, and initial access brokers. By monitoring the infrastructure required to support these payloads, the team increases their chances of detecting a threat early in the kill chain, often before the actual campaign begins.
+
+**Future Initiatives and Work-in-Progress**
+Santi outlined several ongoing projects aimed at enhancing the organization's capabilities:
+*   **Infrastructure of Interest (IoI):** A project that leverages telemetry from the entire customer fleet. If one customer's tool (e.g., SentinelOne) detects a threat, IoI gathers those IOCs, validates them, and deploys the detection to the entire fleet, creating a "herd immunity" effect.
+*   **CVE Management:** A renewed effort to prioritize vulnerabilities not just by their CVSS score, but by combining data on the availability of exploits (like Metasploit) and whether ransomware groups are actively utilizing them.
+*   **Behavioral Clustering:** Grouping malicious infrastructure together based on usage patterns to associate newly discovered domains with known campaigns.
+*   **YARA Memory Hunting:** A conceptual project to scan for Java-based malware directly utilizing hardware drive caches, bypassing the massive bandwidth constraints of uploading memory dumps to the cloud.
+
+**Next Steps and Wrap-Up**
+The meeting concluded with the host, Se, encouraging the wider organization to utilize these tools. He announced that all team members would receive Premium access to OTX to view private intelligence pulses. Additionally, Se introduced the **Threat Intel Summit**, a new weekly initiative designed to consolidate and unify the threat intelligence processes of the four or five companies now forming Level Blue.
+
+Upcoming meetings will feature a deep dive into **IDRA**, an AI/LLM module for analyzing malware samples, followed by a presentation on the legacy Trustwave MDR AI research team.

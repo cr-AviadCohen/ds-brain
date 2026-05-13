@@ -1,0 +1,215 @@
+|Environment<br>type|Steps|
+|---|---|
+|Environments with<br>the Data Platform<br>Infrastructure|Do one of the following:<br>In the**Malops management**<br>screen, in the MalOps grid,<br>select a MalOp and above the<br>MalOps list, click**Exclude**<br>In the MalOp details screen,<br>click**Exclude**.|
+|Environments<br>without the Data<br>Platform<br>Infrastructure|Do one of the following:<br>From the**Malops management**<br>screen, select the appropriate<br>MalOp and click**Respond**.<br>From the**Malop details** screen,<br>select**Respond** in the upper<br>right corner. For Endpoint<br>Protection MalOps, you can also<br>click**Exclude** directly from this<br>screen.<br>Then, in the**Respond to Malop**<br>window, select**Malop is benign -**<br>**Exclude**. The**Exclude Malop**<br>window appears.|
+
+
+
+2. You will be given one or both of the following options,
+
+
+depending on the MalOp:
+
+
+**Versions 23.2.24 and earlier:**
+
+
+
+
+
+
+
+
+|Option|Description|
+|---|---|
+|Add root cause<br>to allowlist|The Cybereason platform will add the<br>hash, IP, process, module, or domain<br>to the allowlist.|
+|Create<br>behavioral<br>allowlist rule|Directs you to the**Behavioral**<br>**allowlisting** screen to build a<br>behavioral allowlisting rule for the<br>behavior represented in this MalOp.|
+|Set investigation<br>status to Closed|Automatically closes the MalOp.|
+
+
+**Versions 23.2.40 and later:**
+
+
+
+
+
+
+|Option|Description|
+|---|---|
+|Set as false<br>positive and stop<br>future<br>recurrences|Notes that the MalOp and its root<br>causes are noted as a false positive<br>malicious behavior. The Cybereason<br>platform will note this and prevent<br>future instances of this same type of<br>MalOp.|
+|Set as false<br>positive only|Notes that the MalOp and its root<br>causes are noted as a false positive<br>malicious behavior.|
+|Unquarantine<br>fles|Remove fles from quarantine. This<br>option is available for Anti-Malware ><br>Signatures-generated MalOps only,<br>from version 23.2.12x and higher<br>(contact Support to enable this<br>feature).|
+|Send fle for<br>analysis|Report false positives to Cybereason<br>for analysis, to help us improve our<br>detection accuracy and reduce false<br>positives. Upload the fle here. The fle<br>hash will be added to your Reputation<br>> Allowlist. This option is available for<br>Anti-Malware > Signatures- generated<br>MalOps only from version 23.2.12x<br>and higher (contact Support to enable<br>this feature).|
+
+
+|Option|Description|
+|---|---|
+|BAL rule|This option displays only if you select<br>the**Set as false positive and stop**<br>**future recurrences** option. This option<br>is also only available for**AI Hunting**<br>MalOps.<br>Directs you to the**Behavioral**<br>**Allowlisting** screen to create a<br>behavioral allowlisting rule for the<br>MalOp behavior.<br>If needed, for AI Hunting MalOps, the<br>**Set option to** option, select the root<br>cause of the MalOp to automatically<br>populate the root cause for your<br>behavioral allowlisting rule.<br>For Endpoint Protection MalOps, the<br>Cybereason platform automatically<br>selects the root caue for the**Set**<br>**option to** feld. You cannot modify this<br>feld.|
+|Reputation list|This option is also only available for**AI**<br>**Hunting** MalOps.<br>Adds the identifer (fle hash, IP<br>address, or domain name) for the root<br>cause in your environment's allowlist.<br>When the Cybereason platform adds<br>this reputation the allowlist, the<br>reputation displays**Excluded by**<br>**<user>** in the description column for<br>the item.|
+
+
+|Option|Description|
+|---|---|
+|Set investigation<br>status to<br>Closed/Close<br>MalOp after<br>exclusion|Automatically closes the MalOp.<br>The Cybereason platform selects this<br>option by default.|
+
+
+
+3. Click **Exclude** . A confirmation screen appears. Click **Done** to
+
+
+close the dialog box.
+
+
+Note
+
+
+The **Exclude** option is not supported for MalOps opened
+
+
+by Behavioral Execution Prevention, Variant
+
+Payload/Variant File Protection, and Exploit Protection.
+
+
+If you selected the option to add a behavioral allowlisting rule, the
+
+**Behavioral Allowlisting** screen opens.
+
+
+Excluded MalOps are marked as **Excluded** in the **Malops**
+
+**management** screen.
+
+
+If you later reopen the MalOp for further investigation, the actions
+
+you applied in the steps above are reversed. For example, if you
+
+
+set an Excluded MalOp to **Reopened**, if you selected to add the
+
+item to your environment's allowlist, when the MalOp is reopened,
+
+
+the item is removed from the allowlist.
+
+## Report false positives
+
+
+Note
+
+
+This feature is not generally available and is disabled by
+
+[default. Open a Technical Support (/s/support) case to gain](https://nest.cybereason.com/s/support)
+
+
+access to this feature.
+
+
+You can report false positives from the options menu (the three
+
+
+dots) at the top-right of the MalOp Details screen for MalOps
+
+generated by the **Anti-Malware > Signatures** mode. This helps
+
+
+Cybereason improve our detection accuracy and reduces false
+
+positives in the future.
+
+
+From the top-right options menu, click **Report file for analysis** .
+
+
+Upload the file and click **Report File** . You can load files up to 20
+
+
+MB.
+
+
+You can also report false positives from the **Exclude** screen (see
+
+
+above).
+
+
+After the file is submitted, a success message appears at the
+
+
+bottom of the screen, with a link to the support case that was
+
+created on the Nest. Please note that the case will be visible after
+
+
+a few minutes delay.
+
+## Update reputations for items associated
+
+## with MalOps
+
+
+You can manually add items to your organization's allowlist, or
+
+build behavioral allowlisting rules to prevent certain behaviors
+
+
+from triggering MalOps.
+
+
+For files, domains, IP addresses, processes, and modules
+
+
+associated with a false positive MalOp, you can add these items
+
+to your organization's allowlist. Once the items are on the allowlist,
+
+
+the Cybereason platform will not generate MalOps for these items.
+
+[For details, see Manage Reputations (/s/knowledge-base?](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-reputations&language=en_US#manage-reputations)
+
+
+[article=24-1-manage-reputations&language=en_US#manage-](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-reputations&language=en_US#manage-reputations)
+
+[reputations).](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-reputations&language=en_US#manage-reputations)
+
+## Manually add behavioral allowlisting rules
+
+## for behaviors in the MalOp
+
+
+When you create a behavioral allowlist rule, you explicitly instruct
+the Cybereason platform to not generate a MalOp for the specific
+
+
+behavior in the rule. For each false positive result or for scenarios
+
+in which you see numerous false positive results, you should
+
+
+[create behavioral allowlist rules. For details, see Manage](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-behavioral-allowlisting-rules&language=en_US#manage-behavioral-allowlisting-rules)
+
+[Behavioral Allowlisting Rules (/s/knowledge-base?article=24-1-](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-behavioral-allowlisting-rules&language=en_US#manage-behavioral-allowlisting-rules)
+
+
+[manage-behavioral-allowlisting-rules&language=en_US#manage-](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-behavioral-allowlisting-rules&language=en_US#manage-behavioral-allowlisting-rules)
+
+[behavioral-allowlisting-rules).](https://nest.cybereason.com/s/knowledge-base?article=24-1-manage-behavioral-allowlisting-rules&language=en_US#manage-behavioral-allowlisting-rules)
+
+
+If you find a large number of false positive Endpoint Protection
+
+MalOps, you may want to adjust your Anti-Malware settings to a
+
+
+[less aggressive setting. For details, see Set the Anti-Malware](https://nest.cybereason.com/s/knowledge-base?article=24-1-set-the-anti-malware-modes&language=en_US#set-the-anti-malware-modes)
+
+[Modes (/s/knowledge-base?article=24-1-set-the-anti-malware-](https://nest.cybereason.com/s/knowledge-base?article=24-1-set-the-anti-malware-modes&language=en_US#set-the-anti-malware-modes)
+
+
+[modes&language=en_US#set-the-anti-malware-modes).](https://nest.cybereason.com/s/knowledge-base?article=24-1-set-the-anti-malware-modes&language=en_US#set-the-anti-malware-modes)
+
+
+

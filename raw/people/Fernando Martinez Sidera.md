@@ -1,0 +1,5 @@
+- Name: Fernando Martinez Sidera
+- Title: Lead Cybersecurity
+- Org: Labs
+- Location: Spain
+- Manager: [[Santiago Cortes Diaz]]

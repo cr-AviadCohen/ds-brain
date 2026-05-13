@@ -1,0 +1,30 @@
+# IDEs
+.vscode/
+.idea/
+.cursor/
+
+# macOS
+.DS_Store
+
+# Playwright MCP
+.playwright-mcp/
+
+# Obsidian — per-user state + plugin distributables
+# (track only settings: app.json, appearance.json, *-plugins.json, graph.json,
+#  and plugin data.json + manifest.json; ignore main.js + styles.css since
+#  Obsidian re-fetches them on plugin enable)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+tools/__pycache__/
+tools/lint/__pycache__/
+tools/lint/tests/__pycache__/
+tools/convert/__pycache__/
+tools/convert/tests/__pycache__/
+tools/.venv/¬
+tools/.pytest_cache/
+.smart-env/
+
+# Reference vault (read-only inspiration material, not part of the brain)
+reference/

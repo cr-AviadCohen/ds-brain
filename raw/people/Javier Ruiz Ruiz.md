@@ -1,0 +1,5 @@
+- Name: Javier Ruiz Ruiz
+- Title: Lead Cybersecurity
+- Org: Labs
+- Location: Spain
+- Manager: [[Santiago Cortes Diaz]]
