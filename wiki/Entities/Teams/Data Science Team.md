@@ -8,7 +8,8 @@ members: ["[[Inbar Dekel]]", "[[Aviad Cohen]]", "[[Guy Kassorla]]", "[[Itamar He
 mission: ML / GenAI R&D for the Cybereason platform — owns ~28 active projects across detection, hunting, malware analysis, and agentic workflows.
 related_projects: ["[[AI Assistant]]", "[[AIDRA]]", "[[DS Brain]]", "[[Hunter]]", "[[Owlint-Sigma]]", "[[OWLINT]]", "[[NGAV]]", "[[META]]", "[[MLAV]]", "[[Smart Asset Correlation]]", "[[XDR Correlation for Phoenix]]", "[[Incident Investigation (for Fusion 2)]]", "[[Rules Quality]]", "[[Detection Engineering Hub]]", "[[Pixel Agents]]", "[[OwlHub]]", "[[OwlBot]]"]
 related_systems: ["[[Phoenix]]", "[[Azure AI Foundry]]", "[[LangGraph]]", "[[Langfuse]]", "[[Cursor]]"]
-last_updated: 2026-05-12
+related_teams: ["[[Spider Labs]]"]
+last_updated: 2026-05-13
 ---
 
 # Data Science Team

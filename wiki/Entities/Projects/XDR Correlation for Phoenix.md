@@ -8,8 +8,9 @@ team: []
 started: 2026-05-11
 systems: ["[[Phoenix]]"]
 related_decisions: []
+related_teams: ["[[Phoenix Team]]"]
 raw_path: raw/data_science_drive/data-science-projects.md
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # XDR Correlation for Phoenix

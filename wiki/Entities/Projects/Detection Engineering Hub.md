@@ -8,8 +8,9 @@ team: []
 started: 2026-05-11
 systems: []
 related_decisions: []
+related_projects: ["[[Owlint-Sigma]]"]
 raw_path: raw/projects/Itamar Project - Detection Engineering Hub/
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # Detection Engineering Hub

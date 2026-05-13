@@ -8,8 +8,9 @@ team: [[Aviad Cohen]]
 started: 2026-05-11
 systems: ["[[LangGraph]]", "[[VirusTotal]]"]
 related_decisions: []
+related_teams: ["[[Labs]]"]
 raw_path: raw/projects/Project - AIDRA/
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # AIDRA

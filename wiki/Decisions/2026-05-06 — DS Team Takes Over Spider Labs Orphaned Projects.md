@@ -5,9 +5,9 @@ tags: [decision, wiki]
 date: 2026-05-06
 deciders: ["[[Inbar Dekel]]", "[[Santiago Cortes Diaz]]", "[[Aviad Cohen]]"]
 status: accepted
-related_projects: []
+related_projects: ["[[Martin News Chatbot]]"]
 related_systems: ["[[Alert Logic]]"]
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # DS Team Takes Over Spider Labs Orphaned Projects — 2026-05-06

@@ -10,8 +10,9 @@ target_ship: n/a
 systems: ["[[USMA]]"]
 related_decisions: []
 related_concepts: ["[[UEBA (concept)]]"]
+related_ideas: ["[[Rebuild UEBA in Phoenix XDR]]"]
 raw_path: raw/meetings/meeting_2026.05.12_aviad_jose.txt
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # UEBA (USMA)

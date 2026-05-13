@@ -6,9 +6,9 @@ org: ["[[LevelBlue]]"]
 lead: ["[[Pawel Knapczyk]]"]
 members: ["[[Pawel Knapczyk]]", "[[Phil Hay]]", "[[Karl Sigler]]"]
 mission: Threat research arm inherited via Trustwave — Sigma rules, threat-intel content, and the Tipper AI pipeline.
-related_projects: ["[[Owlint-Sigma]]", "[[OWLINT]]"]
+related_projects: ["[[Owlint-Sigma]]", "[[OWLINT]]", "[[Martin News Chatbot]]"]
 related_systems: ["[[Tipper]]", "[[Mail Marshal]]"]
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # Spider Labs
@@ -33,6 +33,7 @@ interoperability ([[Owlint-Sigma]]) and automated CTI ([[OWLINT]]).
 
 - [[Owlint-Sigma]] — Sigma rule generation + SIEM translation
 - [[OWLINT]] — automated CTI pipeline
+- [[Martin News Chatbot]] — orphaned Spider Labs project handed to DS team per [[2026-05-06 — DS Team Takes Over Spider Labs Orphaned Projects]]
 
 ## Systems
 

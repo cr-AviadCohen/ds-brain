@@ -8,8 +8,9 @@ team: [[Aviad Cohen]]
 started: 2026-05-11
 systems: []
 related_decisions: []
+related_projects: ["[[XDR Correlation for Phoenix]]"]
 raw_path: raw/projects/Project - RCE-NG/
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # RCE-NG

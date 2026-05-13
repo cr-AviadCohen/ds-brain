@@ -6,10 +6,10 @@ status: active
 lead: [[Guy Kassorla]]
 team: ["[[Aviad Cohen]]", "[[Guy Kassorla]]"]
 started: 2026-05-11
-systems: ["[[LangGraph]]", "[[Azure AI Foundry]]", "[[Langfuse]]"]
+systems: ["[[LangGraph]]", "[[Azure AI Foundry]]", "[[Langfuse]]", "[[Phoenix]]"]
 related_decisions: []
 raw_path: raw/projects/Project - AI Assistant/
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # AI Assistant

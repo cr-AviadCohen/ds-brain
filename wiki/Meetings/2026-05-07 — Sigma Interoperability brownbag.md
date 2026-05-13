@@ -4,10 +4,10 @@ type: meeting
 tags: [meeting, wiki]
 date: 2026-05-07
 participants: ["[[Ziv Mador]]", "[[Itamar Hershko]]", "[[Santiago Cortes Diaz]]", "[[Pawel Knapczyk]]"]
-related_projects: ["[[Owlint-Sigma]]"]
+related_projects: ["[[Owlint-Sigma]]", "[[Detection Engineering Hub]]"]
 related_decisions: ["[[2026-05-07 — Sigma as Common Detection Language]]", "[[2026-05-07 — Deterministic Sigma HQ Translation with LLM Fallback]]"]
 source: raw/meetings/meeting_2026-05-07_BrownBag_Sigma Interoperability Tipper - Itamar
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # Sigma Interoperability brownbag — 2026-05-07

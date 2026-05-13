@@ -6,10 +6,10 @@ status: active
 lead: [[Guy Kassorla]]
 team: ["[[Aviad Cohen]]", "[[Guy Kassorla]]"]
 started: 2026-05-11
-systems: []
+systems: ["[[Phoenix]]"]
 related_decisions: []
 raw_path: raw/projects/Project - IRCA/
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # IRCA

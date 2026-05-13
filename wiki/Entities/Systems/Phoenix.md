@@ -3,12 +3,12 @@ title: Phoenix
 type: system
 tags: [system, wiki]
 owner: Cybereason
-related_projects: ["[[Phoenix Review]]", "[[RCE-NG]]", "[[Malop-Worthy]]", "[[Risk Assessment]]"]
+related_projects: ["[[Phoenix Review]]", "[[RCE-NG]]", "[[Malop-Worthy]]", "[[Risk Assessment]]", "[[IRCA]]", "[[AI Assistant]]"]
 seeds:
   - raw/cybereason/phoenix/summary-phoenix-server.md
   - raw/cybereason/phoenix/summary-phoenix-agent.md
   - raw/data_science_drive/data-science-main.md
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # Phoenix
@@ -42,9 +42,11 @@ Replaces the legacy Core backend. Core stored data graph-based in Transparency (
 
 ## Related entities
 
-[[Phoenix Review]], [[RCE-NG]], [[Malop-Worthy]], [[Risk Assessment]], [[Core]]
+[[Phoenix Review]], [[RCE-NG]], [[Malop-Worthy]], [[Risk Assessment]], [[IRCA]], [[AI Assistant]], [[Core]]
 
 Active ideas targeting Phoenix as deployment surface: [[Rebuild UEBA in Phoenix XDR]].
+
+Both [[IRCA]] and [[AI Assistant]] are presently deferred — Phoenix engineering bandwidth is the gating constraint per [[2026-05-12 — Aviad and Jose intro]].
 
 ## Open questions
 

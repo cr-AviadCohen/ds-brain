@@ -8,8 +8,9 @@ team: []
 started: 2026-05-11
 systems: ["[[Langfuse]]", "[[LangGraph]]", "[[Tipper]]"]
 related_decisions: ["[[2026-05-07 — Sigma as Common Detection Language]]", "[[2026-05-07 — Deterministic Sigma HQ Translation with LLM Fallback]]"]
+related_projects: ["[[Detection Engineering Hub]]"]
 raw_path: raw/projects/Itamar Project - Owlint-Sigma/
-last_updated: 2026-05-12
+last_updated: 2026-05-13
 ---
 
 # Owlint-Sigma

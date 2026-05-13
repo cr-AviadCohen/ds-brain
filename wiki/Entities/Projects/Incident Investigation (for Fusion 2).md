@@ -6,8 +6,9 @@ status: active
 started: 2026-05-11
 systems: []
 related_decisions: []
+related_teams: ["[[Fusion 2 Team]]"]
 raw_path: raw/projects/Project - Incident Investigation (for Fusion 2)/
-last_updated: 2026-05-11
+last_updated: 2026-05-13
 ---
 
 # Incident Investigation (for Fusion 2)
