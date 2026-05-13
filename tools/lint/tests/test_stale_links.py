@@ -51,10 +51,17 @@ def test_link_inside_tilde_fenced_block_ignored(tmp_path: Path) -> None:
     assert not any(s.target == "<Person>" for s in stale)
 
 
-def test_link_in_inline_code_still_flagged(tmp_path: Path) -> None:
-    # Inline `[[X]]` (single backticks) — too noisy to strip; only block fences are
-    # stripped. Document this behavior with a test that pins the current scope.
+def test_link_inside_inline_code_ignored(tmp_path: Path) -> None:
+    # Inline `[[X]]` (single backticks) is a literal placeholder, not a real
+    # wikilink — log entries that document wikilink edits must not get flagged.
     p = tmp_path / "y.md"
     p.write_text("See `[[Inline Ghost]]` in prose.\n", encoding="utf-8")
     stale = find_stale_links(tmp_path)
-    assert any(s.target == "Inline Ghost" for s in stale)
+    assert not any(s.target == "Inline Ghost" for s in stale)
+
+
+def test_link_inside_double_backtick_inline_code_ignored(tmp_path: Path) -> None:
+    p = tmp_path / "z.md"
+    p.write_text("Render ``[[Ghost `note`]]`` literally.\n", encoding="utf-8")
+    stale = find_stale_links(tmp_path)
+    assert not any("Ghost" in s.target for s in stale)
