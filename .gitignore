@@ -9,14 +9,13 @@
 # Playwright MCP
 .playwright-mcp/
 
-# Obsidian — per-user state + plugin distributables
-# (track only settings: app.json, appearance.json, *-plugins.json, graph.json,
-#  and plugin data.json + manifest.json; ignore main.js + styles.css since
-#  Obsidian re-fetches them on plugin enable)
+# Obsidian — per-user state + per-user plugin installs
+# (track top-level vault settings only: app.json, appearance.json,
+#  *-plugins.json, graph.json. Plugins are per-user — each team member
+#  installs the ones they want via Obsidian's UI.)
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
-.obsidian/plugins/*/main.js
-.obsidian/plugins/*/styles.css
+.obsidian/plugins/
 tools/__pycache__/
 tools/lint/__pycache__/
 tools/lint/tests/__pycache__/
