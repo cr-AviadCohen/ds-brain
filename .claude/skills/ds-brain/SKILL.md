@@ -1,13 +1,13 @@
 ---
 name: ds-brain
-description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Reads through the Obsidian MCP; writes ONLY into the repo's INBOX/ folder via the GitHub MCP (`@modelcontextprotocol/server-github`) using `create_or_update_file` against `cybereason-labs/ds-brain` on branch `unified`. No local clone needed for writes; each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if either is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, scripts/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install obsidian mcp", "install git mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
+description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Both reads and writes go through the GitHub MCP (`@modelcontextprotocol/server-github`) against `cybereason-labs/ds-brain` on branch `unified`. Reads use `search_code` and `get_file_contents`; writes use `create_or_update_file` into the repo's INBOX/ folder. No local clone needed; no Obsidian dependency. Each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if the GitHub MCP is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, scripts/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install git mcp", "install github mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
 ---
 
 # Data Science Brain
 
 ## What this skill is
 
-The Data Science team maintains a shared **second brain** — an Obsidian-compatible Markdown vault following Andrej Karpathy's wiki-LLM pattern. It lives at `~/Code/ds-brain` (or wherever the team member cloned it). It is a single source of truth for: who is on the team, what projects are active, what we decided, what we researched, who we work with, what we learned in meetings, and what raw material backs all of that up.
+The Data Science team maintains a shared **second brain** — an Obsidian-compatible Markdown vault following Andrej Karpathy's wiki-LLM pattern. It lives in the GitHub repo `cybereason-labs/ds-brain` on branch `unified`. It is a single source of truth for: who is on the team, what projects are active, what we decided, what we researched, who we work with, what we learned in meetings, and what raw material backs all of that up.
 
 The brain is **multi-author** and has a strict separation of concerns:
 
@@ -37,39 +37,50 @@ If you're under 50% sure the user wants the brain, ask one short clarifying ques
 
 ## Tools you will use
 
-This skill is MCP-only. **No filesystem or Bash fallback for reads or writes.** If either MCP is missing, the skill cannot operate — guide the user through installation first, then resume.
+This skill is **GitHub-MCP-only**. No filesystem, no Bash, no Obsidian dependency. Both reads and writes go through the same MCP. If the GitHub MCP is missing, the skill cannot operate — guide the user through installation first, then resume.
 
-### Required MCPs
+### Required MCP
 
 | MCP | Used for | Without it |
 |-----|----------|-----------|
-| `obsidian` (`mcp-obsidian`) | Search, read, traverse the wiki | Reads halt |
-| `github` (`@modelcontextprotocol/server-github`) | Create INBOX files directly on the remote repo via GitHub API | Writes halt |
+| `github` (`@modelcontextprotocol/server-github`) | Search, read, and write notes on the remote repo via GitHub API | Skill halts |
 
-Check availability by inspecting the tool list for `mcp__obsidian__*` and `mcp__github__*` tools. If either family is absent in the current session, the corresponding operation is blocked.
+Check availability by inspecting the tool list for `mcp__github__*` tools. If that family is absent in the current session, the skill is blocked.
 
 ### Gate before operating
 
-Before answering a read request or starting a write request, confirm the required MCP is connected.
+Before answering a read request or starting a write request, confirm the GitHub MCP is connected.
 
-- **Read request, no `obsidian` MCP:** stop. Tell the user: "The Obsidian MCP isn't connected in this session, so I can't read the brain. I'll walk you through the one-time install (about 5 minutes) — ready?" If yes, read `references/setup.md` and execute the Obsidian steps with the user (you run the `claude mcp add` commands; the user does the in-Obsidian steps and supplies the API key). After install + Claude Code restart, resume the original request.
-- **Write request, no `github` MCP:** same pattern, pointing at the GitHub MCP install steps in `references/setup.md`. The user must generate **their own** fine-grained Personal Access Token — never share a team-wide one.
+- **No `github` MCP:** stop. Tell the user: "The GitHub MCP isn't connected in this session, so I can't reach the brain. I'll walk you through the one-time install (about 5 minutes) — ready?" If yes, read `references/setup.md` and execute the steps with the user (you run the `claude mcp add` commands; the user generates **their own** fine-grained Personal Access Token — never share a team-wide one).
 - **User declines install:** acknowledge, do not proceed. The skill does not silently fall back. Tell them the skill needs the MCP and they can return when ready.
 
-### Obsidian MCP (reads)
+### GitHub MCP — reads
 
-When connected, use the Obsidian MCP for every read: searching notes, opening notes by title, traversing wikilinks, listing folder contents, retrieving frontmatter. Obsidian MCP understands the vault structure natively and returns properly resolved links.
+Every read goes through the GitHub MCP against `owner=cybereason-labs`, `repo=ds-brain`, `ref=unified`.
 
-### GitHub MCP (writes)
+Primary tools:
 
-When connected, use the GitHub MCP to write each new INBOX file **directly to the remote repo** at `cybereason-labs/ds-brain` via GitHub API. No local clone is needed for writes — the file lands on `unified` (or the team's working branch) as a single API-driven commit authored by the PAT owner.
+- `mcp__github__search_code` — keyword / phrase / symbol search across the repo. Use the `q` query syntax with `repo:cybereason-labs/ds-brain` to scope. Add `path:wiki/` to bias toward synthesized notes, or `path:raw/` only when the user explicitly asked for raw evidence. Examples:
+  - `q: "Tipper" repo:cybereason-labs/ds-brain path:wiki/`
+  - `q: "LoRA fine-tune" repo:cybereason-labs/ds-brain path:wiki/Entities/Projects/`
+  - `q: filename:Tipper.md repo:cybereason-labs/ds-brain`
+- `mcp__github__get_file_contents` — read a specific file or list a directory. For directory listing, pass `path` pointing at the folder (e.g., `wiki/Entities/People`) and the API returns the directory tree. For file reads, pass the full path (e.g., `wiki/Entities/Projects/Tipper.md`). Always pass `ref: unified`.
+- `mcp__github__list_commits` — only when the user explicitly asks for history of a note.
+
+Wikilink traversal: GitHub search does not resolve `[[Other Note]]` for you. Extract the link target from the note text, map it to a likely path (`wiki/Entities/People/<Name>.md`, `wiki/Entities/Projects/<Name>.md`, etc.), and fetch with `get_file_contents`. If the first guess 404s, fall back to `search_code` with `filename:<Name>.md`.
+
+Note: GitHub's code search has a ~1-minute index lag for very recent commits and ignores files >384 KB. For freshly written content or large transcripts, fall back to a directory listing + targeted `get_file_contents`.
+
+### GitHub MCP — writes
+
+Writes target `cybereason-labs/ds-brain` on branch `unified` (confirm if the user says otherwise).
 
 Preferred tool: `mcp__github__create_or_update_file` — one call creates the file and the commit in one shot.
 
 Required arguments:
 - `owner`: `cybereason-labs`
 - `repo`: `ds-brain`
-- `branch`: `unified` (the team's working branch — confirm if user says otherwise)
+- `branch`: `unified`
 - `path`: `INBOX/YYYY-MM-DD-<kebab-slug>.md`
 - `content`: the full Markdown body (frontmatter + content)
 - `message`: `inbox | <subject>` — matches the brain's existing commit-message convention
@@ -83,11 +94,11 @@ Use **fewest-side-effects** behavior on writes: one file per commit, scoped to `
 
 ### Setup walkthrough on demand
 
-If the user explicitly asks ("install obsidian mcp", "install git mcp", "set up the brain", "how do I configure this"), read `references/setup.md` and walk them through it without waiting for an operation to fail.
+If the user explicitly asks ("install github mcp", "install git mcp", "set up the brain", "how do I configure this"), read `references/setup.md` and walk them through it without waiting for an operation to fail.
 
 ## Brain structure quick reference
 
-The wiki layer is organized like this — use it to plan a query:
+The wiki layer is organized like this — use it to plan a query and to map wikilinks to file paths:
 
 ```
 wiki/
@@ -116,17 +127,19 @@ wiki/
     └── pulse.md                  ← daily ops notes
 ```
 
-Wikilinks look like `[[Inbar Dekel]]` or `[[Tipper]]`. Frontmatter on every page carries `wiki` in the `tags` array as the layer marker.
+Wikilinks look like `[[Inbar Dekel]]` or `[[Tipper]]`. To follow a wikilink, map `[[<Name>]]` to the most likely path under `wiki/Entities/<Folder>/<Name>.md` and fetch via `get_file_contents`; if it 404s, run `search_code` with `filename:<Name>.md repo:cybereason-labs/ds-brain`.
+
+Frontmatter on every wiki page carries `wiki` in the `tags` array as the layer marker.
 
 ## Query workflow
 
 When the user asks a question that wants brain context:
 
-1. **Decide the entry point.** If the user named a person/project/concept, look it up directly under `Entities/`. If they asked a question or "what do we know about X," search by keyword. If they want structural navigation ("what's in research"), open `wiki/INDEX.md`.
+1. **Decide the entry point.** If the user named a person/project/concept, jump straight to the likely path under `wiki/Entities/.../<Name>.md` with `get_file_contents`. If they asked an open question or "what do we know about X," start with `search_code`. If they want structural navigation ("what's in research"), fetch `wiki/INDEX.md`.
 
-2. **Search.** Use the Obsidian MCP search tool. Prefer hits in `wiki/` over `raw/` unless the user explicitly asked for raw source material.
+2. **Search.** Use `mcp__github__search_code` with `repo:cybereason-labs/ds-brain` and a `path:wiki/` scope unless the user explicitly asked for raw source material. Add more specific subfolder scopes (`path:wiki/Entities/Projects/`, `path:wiki/Decisions/`) to narrow.
 
-3. **Read the candidate notes.** Pull frontmatter + the relevant section. If a note links to `[[Other Note]]` that's clearly relevant to the question, follow the link.
+3. **Read the candidate notes.** Pull frontmatter + the relevant section via `get_file_contents`. If a note links to `[[Other Note]]` clearly relevant to the question, follow the link by guessing the path and fetching.
 
 4. **Compose the answer.** Stay grounded — every non-trivial claim should cite a wiki page (and the underlying `raw/` source when the user asked for evidence). Quote sparingly. If the brain doesn't contain enough to answer, say so explicitly rather than inventing.
 
@@ -225,9 +238,10 @@ If the user explicitly says they are a maintainer and wants to bypass these rule
 **User:** "What do we know about the Tipper rollout?"
 
 **Behavior:**
-1. Search via Obsidian MCP (`mcp__obsidian__search` for "Tipper").
-2. Open the Tipper project note via `mcp__obsidian__get_file_contents`. Read its frontmatter + status + linked decisions and meetings.
-3. Answer concisely with citations: "Per [[Tipper]] (last updated 2026-05-08), rollout is in pilot with [[Cybereason]] EDR fleet. [[Decision: Tipper alert routing 2026-04-22]] set the threshold at 0.7. Open questions: false-positive rate on Windows endpoints (flagged in the project note)."
+1. `mcp__github__search_code` with `q: "Tipper" repo:cybereason-labs/ds-brain path:wiki/`.
+2. `mcp__github__get_file_contents` for `wiki/Entities/Projects/Tipper.md` on `ref: unified`. Read its frontmatter + status + linked decisions and meetings.
+3. Follow wikilinks: fetch `wiki/Decisions/Tipper alert routing 2026-04-22.md` (guessed from `[[Decision: Tipper alert routing 2026-04-22]]`); if 404, fall back to `search_code` with `filename:"Tipper alert routing*" repo:cybereason-labs/ds-brain`.
+4. Answer concisely with citations: "Per [[Tipper]] (last updated 2026-05-08), rollout is in pilot with [[Cybereason]] EDR fleet. [[Decision: Tipper alert routing 2026-04-22]] set the threshold at 0.7. Open questions: false-positive rate on Windows endpoints (flagged in the project note)."
 
 ### Example 2 — Save a meeting summary
 
@@ -271,9 +285,9 @@ If the user explicitly says they are a maintainer and wants to bypass these rule
 
 | Situation | What to do |
 |-----------|-----------|
-| Obsidian MCP not connected | Halt the read. Walk the user through the Obsidian section of `references/setup.md`. Resume the original request after Claude Code restart. |
-| GitHub MCP not connected | Halt the write. Walk the user through the GitHub section of `references/setup.md` (PAT generation + `claude mcp add github ...`). Resume after restart. |
-| Obsidian app not running / vault not open | Tell the user to open Obsidian and the `ds-brain` vault. The Local REST API plugin only runs while Obsidian is open. Retry the read once they confirm. |
+| GitHub MCP not connected | Halt. Walk the user through `references/setup.md` (PAT generation + `claude mcp add github ...`). Resume after Claude Code restart. |
+| Search returns nothing for a recent commit | GitHub code-search index lags ~1 minute and skips files >384 KB. Retry after a beat, or fall back to a directory listing via `get_file_contents` on the parent folder and a targeted file fetch. |
+| `get_file_contents` returns 404 on a guessed wikilink path | Fall back to `search_code` with `filename:<Name>.md repo:cybereason-labs/ds-brain`. If still nothing, tell the user the note doesn't exist; offer to file an INBOX request. |
 | GitHub API write fails — `401 Unauthorized` | PAT is invalid, expired, or revoked. Point the user at the PAT regeneration steps in `references/setup.md`. Do not retry. |
 | GitHub API write fails — `403 Forbidden` | PAT lacks `Contents: Read and write` on this repo, or the user isn't a collaborator on `cybereason-labs/ds-brain`. Show the exact response. Point at PAT scope section of `references/setup.md` or ask the maintainer to add them as a collaborator. |
 | GitHub API write fails — `404 Not Found` | Repo path / branch wrong. Verify owner = `cybereason-labs`, repo = `ds-brain`, branch exists (typically `unified`). |
@@ -281,8 +295,7 @@ If the user explicitly says they are a maintainer and wants to bypass these rule
 | GitHub API write fails — `422 Unprocessable Entity` | Usually means the file content failed branch-protection rules (e.g., required PR review). Show the error. Offer to use `mcp__github__create_pull_request` workflow instead of direct commit. |
 | GitHub API rate limit hit | Show remaining quota from response headers. Tell user to wait until reset window or use a PAT with higher limits. Do not retry. |
 | User asks to write outside INBOX | Decline, explain the constraint, offer to file an update-request note instead. |
-| Search returns nothing | Tell the user. Suggest alternative queries (synonyms, broader terms, structural navigation via INDEX.md). Don't invent. |
-| User declines to install a missing MCP | Acknowledge. Do not proceed. The skill is MCP-required; reading the vault directly or shelling out to git would create inconsistent behavior across the team. |
+| User declines to install the GitHub MCP | Acknowledge. Do not proceed. The skill is MCP-required; reading or writing the vault any other way would create inconsistent behavior across the team. |
 
 ## Operational checklist
 
@@ -298,7 +311,7 @@ Before claiming a write operation is done, verify:
 
 Before claiming a read operation is done, verify:
 
-- [ ] You actually opened the relevant note(s), not just an INDEX entry
+- [ ] You actually opened the relevant note(s) via `get_file_contents`, not just a search hit snippet
 - [ ] You cited the wiki page(s) you drew from
 - [ ] You noted uncertainty if the brain didn't have enough evidence
 - [ ] You didn't invent facts to fill gaps
@@ -306,3 +319,4 @@ Before claiming a read operation is done, verify:
 ## Reference files
 
 - `references/inbox-templates.md` — Markdown templates for every `source_type` (meeting, insight, raw, link, decision-draft, wiki-update-request, free-form)
+- `references/setup.md` — One-time GitHub MCP install (PAT generation + `claude mcp add github ...`)
