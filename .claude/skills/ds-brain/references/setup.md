@@ -33,16 +33,17 @@ A local clone of `ds-brain` is **not needed** — all reads and writes go throug
 
 **Hard rule.** Every team member generates their own token. Never share it, never commit it, never paste it into any chat or shared doc. A token authors commits as the GitHub user who created it — sharing one destroys audit trail and creates a single point of failure on revocation.
 
-1. Go to https://github.com/settings/personal-access-tokens/new (fine-grained — preferred over classic).
-2. **Token name:** `ds-brain-mcp` or anything you'll recognize.
-3. **Expiration:** as short as your security policy allows (90 days is reasonable).
-4. **Resource owner:** the org / user owning the repo (`cybereason-labs`).
-5. **Repository access → Only select repositories →** check `cybereason-labs/ds-brain` only. Do not grant access to all repositories.
-6. **Repository permissions:**
-   - **Contents: Read and write** (required — reads notes and creates INBOX files)
-   - **Metadata: Read-only** (auto-required by GitHub)
-   - Optional: **Pull requests: Read and write** — only needed if you want the skill to open PRs for INBOX entries instead of direct commits.
-7. Generate the token. **Copy it once** — GitHub won't display it again. Save it to your password manager.
+Click path in GitHub:
+
+1. **GitHub user settings → Developer Settings → Personal Access Tokens → Fine-Grained Tokens → Generate New Token**
+2. **Token name:** `DS-Brain` (or whatever you want).
+3. **Resource Owner:** `cybereason-labs`.
+4. **Expiration:** `366 days`.
+5. **Repository access →** change to `Only select repositories` → choose `ds-brain`.
+6. **Permissions → Add permissions → select `Contents` →** change Contents access to `Read and Write`. (GitHub auto-adds `Metadata: Read-only`.)
+7. Click **Generate token**. **Copy it once** — GitHub won't display it again. Save it to your password manager.
+
+Optional: also add **Pull requests: Read and write** if you plan to have the skill open PRs for INBOX entries instead of direct commits.
 
 ## Step 2 — Register the GitHub MCP
 
