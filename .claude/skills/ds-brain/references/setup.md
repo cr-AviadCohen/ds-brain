@@ -35,7 +35,7 @@ If `uvx` is missing: `brew install uv` (macOS) or see https://docs.astral.sh/uv/
 A local clone of `ds-brain` is only needed to give Obsidian a vault to open. Writes go through the GitHub API and do not touch any local clone. If you don't have a clone yet:
 
 ```bash
-git clone git@github.com:cr-AviadCohen/ds-brain.git ~/Code/ds-brain
+git clone git@github.com:cybereason-labs/ds-brain.git ~/Code/ds-brain
 ```
 
 ---
@@ -79,8 +79,8 @@ claude mcp add obsidian -s user \
 1. Go to https://github.com/settings/personal-access-tokens/new (fine-grained — preferred over classic).
 2. **Token name:** `ds-brain-mcp` or anything you'll recognize.
 3. **Expiration:** as short as your security policy allows (90 days is reasonable).
-4. **Resource owner:** the org / user owning the repo (`cr-AviadCohen`).
-5. **Repository access → Only select repositories →** check `cr-AviadCohen/ds-brain` only. Do not grant access to all repositories.
+4. **Resource owner:** the org / user owning the repo (`cybereason-labs`).
+5. **Repository access → Only select repositories →** check `cybereason-labs/ds-brain` only. Do not grant access to all repositories.
 6. **Repository permissions:**
    - **Contents: Read and write** (required — creates INBOX files)
    - **Metadata: Read-only** (auto-required by GitHub)
@@ -159,11 +159,11 @@ Your token is invalid, expired, or revoked. Regenerate per Step 3 and re-registe
 
 ### Write fails — `403 Forbidden`
 
-Your token lacks `Contents: Read and write` on `cr-AviadCohen/ds-brain`, **or** you aren't a collaborator on that repo. Fix the scope per Step 3. If you don't have collaborator access, ask the maintainer.
+Your token lacks `Contents: Read and write` on `cybereason-labs/ds-brain`, **or** you aren't a collaborator on that repo. Fix the scope per Step 3. If you don't have collaborator access, ask the maintainer.
 
 ### Write fails — `404 Not Found`
 
-The skill targeted a wrong `owner` / `repo` / `branch`. Defaults: `cr-AviadCohen` / `ds-brain` / `unified`. If your team uses a different branch, tell the skill explicitly.
+The skill targeted a wrong `owner` / `repo` / `branch`. Defaults: `cybereason-labs` / `ds-brain` / `unified`. If your team uses a different branch, tell the skill explicitly.
 
 ### Write fails — `409 Conflict` / stale SHA
 

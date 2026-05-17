@@ -1,6 +1,6 @@
 ---
 name: ds-brain
-description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Reads through the Obsidian MCP; writes ONLY into the repo's INBOX/ folder via the GitHub MCP (`@modelcontextprotocol/server-github`) using `create_or_update_file` against `cr-AviadCohen/ds-brain` on branch `unified`. No local clone needed for writes; each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if either is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, scripts/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install obsidian mcp", "install git mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
+description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Reads through the Obsidian MCP; writes ONLY into the repo's INBOX/ folder via the GitHub MCP (`@modelcontextprotocol/server-github`) using `create_or_update_file` against `cybereason-labs/ds-brain` on branch `unified`. No local clone needed for writes; each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if either is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, scripts/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install obsidian mcp", "install git mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
 ---
 
 # Data Science Brain
@@ -62,12 +62,12 @@ When connected, use the Obsidian MCP for every read: searching notes, opening no
 
 ### GitHub MCP (writes)
 
-When connected, use the GitHub MCP to write each new INBOX file **directly to the remote repo** at `cr-AviadCohen/ds-brain` via GitHub API. No local clone is needed for writes — the file lands on `unified` (or the team's working branch) as a single API-driven commit authored by the PAT owner.
+When connected, use the GitHub MCP to write each new INBOX file **directly to the remote repo** at `cybereason-labs/ds-brain` via GitHub API. No local clone is needed for writes — the file lands on `unified` (or the team's working branch) as a single API-driven commit authored by the PAT owner.
 
 Preferred tool: `mcp__github__create_or_update_file` — one call creates the file and the commit in one shot.
 
 Required arguments:
-- `owner`: `cr-AviadCohen`
+- `owner`: `cybereason-labs`
 - `repo`: `ds-brain`
 - `branch`: `unified` (the team's working branch — confirm if user says otherwise)
 - `path`: `INBOX/YYYY-MM-DD-<kebab-slug>.md`
@@ -174,7 +174,7 @@ When the user wants to save something to the brain:
 5. **Write via GitHub MCP — single API call, no local clone.** Use `mcp__github__create_or_update_file` with:
 
    ```
-   owner:   cr-AviadCohen
+   owner:   cybereason-labs
    repo:    ds-brain
    branch:  unified
    path:    INBOX/2026-05-14-tipper-rollout-retro.md
@@ -237,7 +237,7 @@ If the user explicitly says they are a maintainer and wants to bypass these rule
 1. Compose `INBOX/2026-05-14-lora-finetune-deferral.md` using the meeting template.
 2. Frontmatter: `source_type: meeting`, `meeting_date: 2026-05-14`, `participants:` from conversation context, `related_projects: ["[[LoRA Fine-Tune]]"]`, `tags: [inbox, decision, q3-planning]`.
 3. Body captures the decision, the reason (eval harness not ready), open questions (what defines "ready"), action items.
-4. Single API write via `mcp__github__create_or_update_file` (owner=`cr-AviadCohen`, repo=`ds-brain`, branch=`unified`, path=`INBOX/2026-05-14-lora-finetune-deferral.md`, message=`inbox | lora finetune deferral 2026-05-14`).
+4. Single API write via `mcp__github__create_or_update_file` (owner=`cybereason-labs`, repo=`ds-brain`, branch=`unified`, path=`INBOX/2026-05-14-lora-finetune-deferral.md`, message=`inbox | lora finetune deferral 2026-05-14`).
 5. Confirm: "Saved to `INBOX/2026-05-14-lora-finetune-deferral.md` on `unified` as commit `<sha>`. The server-side ingest will pick it up on the next cycle."
 
 ### Example 3 — Wiki update request
@@ -275,8 +275,8 @@ If the user explicitly says they are a maintainer and wants to bypass these rule
 | GitHub MCP not connected | Halt the write. Walk the user through the GitHub section of `references/setup.md` (PAT generation + `claude mcp add github ...`). Resume after restart. |
 | Obsidian app not running / vault not open | Tell the user to open Obsidian and the `ds-brain` vault. The Local REST API plugin only runs while Obsidian is open. Retry the read once they confirm. |
 | GitHub API write fails — `401 Unauthorized` | PAT is invalid, expired, or revoked. Point the user at the PAT regeneration steps in `references/setup.md`. Do not retry. |
-| GitHub API write fails — `403 Forbidden` | PAT lacks `Contents: Read and write` on this repo, or the user isn't a collaborator on `cr-AviadCohen/ds-brain`. Show the exact response. Point at PAT scope section of `references/setup.md` or ask the maintainer to add them as a collaborator. |
-| GitHub API write fails — `404 Not Found` | Repo path / branch wrong. Verify owner = `cr-AviadCohen`, repo = `ds-brain`, branch exists (typically `unified`). |
+| GitHub API write fails — `403 Forbidden` | PAT lacks `Contents: Read and write` on this repo, or the user isn't a collaborator on `cybereason-labs/ds-brain`. Show the exact response. Point at PAT scope section of `references/setup.md` or ask the maintainer to add them as a collaborator. |
+| GitHub API write fails — `404 Not Found` | Repo path / branch wrong. Verify owner = `cybereason-labs`, repo = `ds-brain`, branch exists (typically `unified`). |
 | GitHub API write fails — `409 Conflict` / stale SHA | Someone else updated the same file while you were composing. Re-fetch with `mcp__github__get_file_contents`, get the new `sha`, retry the write. Don't force. |
 | GitHub API write fails — `422 Unprocessable Entity` | Usually means the file content failed branch-protection rules (e.g., required PR review). Show the error. Offer to use `mcp__github__create_pull_request` workflow instead of direct commit. |
 | GitHub API rate limit hit | Show remaining quota from response headers. Tell user to wait until reset window or use a PAT with higher limits. Do not retry. |
@@ -291,7 +291,7 @@ Before claiming a write operation is done, verify:
 - [ ] File path starts with `INBOX/` and matches `YYYY-MM-DD-<slug>.md` convention
 - [ ] Frontmatter has `title`, `created_at`, `created_by`, `source_type`, `status: inbox`, `tags` (with `inbox`)
 - [ ] Body distills the content — not a raw dump
-- [ ] `mcp__github__create_or_update_file` call targeted `owner=cr-AviadCohen`, `repo=ds-brain`, `branch=unified`
+- [ ] `mcp__github__create_or_update_file` call targeted `owner=cybereason-labs`, `repo=ds-brain`, `branch=unified`
 - [ ] Commit message matches `inbox | <subject>` format
 - [ ] API response returned a commit SHA (you saw it)
 - [ ] User told the filename + commit SHA, and that the server-side ingest will process it
