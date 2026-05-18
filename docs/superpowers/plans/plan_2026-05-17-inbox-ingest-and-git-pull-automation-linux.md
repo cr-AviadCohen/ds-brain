@@ -9,7 +9,7 @@
 1. `dsbrain-git-pull.timer` → `dsbrain-git-pull.service` — `OnUnitActiveSec=5min`, runs `scripts/systemd/git-pull.sh` (fast-forward only).
 2. `dsbrain-inbox-ingest.path` → `dsbrain-inbox-ingest.service` — systemd `PathModified=` on `INBOX/` triggers `scripts/systemd/inbox-ingest.sh` whenever directory contents change.
 
-Both scripts share an atomic `mkdir`-based mutex so they cannot collide with each other (or a manual `/ingest` if someone shells in). The ingest script invokes `claude -p "/ingest <path>"` non-interactively for each non-README file, relies on `/ingest`'s built-in commit + push, and has a backstop `git add -A && git commit && git push` after each run in case anything was left uncommitted. `loginctl enable-linger <user>` ensures the user manager runs without an active login session.
+Both scripts share an atomic `mkdir`-based mutex so they cannot collide with each other (or a manual `/ingest` if someone shells in). The ingest script invokes `claude -p "/auto-ingest <path>"` non-interactively for each non-README file. `/auto-ingest` is a dedicated autonomous variant of `/ingest` (`.claude/commands/auto-ingest.md`) — no approval gates, no clarifying questions, autonomous tie-break rules baked into the prompt, commit op token `auto-ingest` to distinguish from human-driven runs. It handles its own commit + push; the script has a backstop `git add -A && git commit && git push` after each run as defense-in-depth. `loginctl enable-linger <user>` ensures the user manager runs without an active login session.
 
 **Why systemd user units (not cron + inotifywait):**
 - **Timer** survives reboots, missed runs are recoverable via `Persistent=true`, status visible via `systemctl --user status`.
@@ -40,7 +40,9 @@ Both scripts share an atomic `mkdir`-based mutex so they cannot collide with eac
 
 **Modify:**
 - `.gitignore` — ignore `scripts/systemd/log/*` except `.gitkeep`, ignore `scripts/systemd/.lock/`.
-- `.claude/commands/ingest.md` — append a "Headless mode" note saying that when invoked via `claude -p`, Step 2's "wait for go-ahead" gate is skipped and the workflow proceeds straight through Phases A→D. (Idempotent — if already added by the macOS plan, skip.)
+
+**Already in place:**
+- `.claude/commands/auto-ingest.md` — dedicated autonomous variant of `/ingest`. No approval gates, no clarifying questions, autonomous tie-break rules, commit op token `auto-ingest`. Headless `claude -p` invocation calls this command directly, so `/ingest` (interactive) is left untouched.
 
 **Test:**
 - Manual end-to-end test described in Task 9. No automated test harness — these are system-integration scripts; correctness is verified by exercising them against the real repo on the actual VM and inspecting `journalctl` + the log files.
@@ -56,8 +58,8 @@ Both scripts share an atomic `mkdir`-based mutex so they cannot collide with eac
 - **Skip-if-empty.** `inbox-ingest.sh` exits 0 silently when only `README.md` (or only dotfiles) remain. Matches `.claude/hooks/inbox-check.sh`.
 - **Path unit refire behaviour.** `PathModified=` fires every time `INBOX/` changes — including when `/ingest` runs `git mv` to drain a file. The script re-checks "is there still a pending file?" each iteration; once drained, exits 0; the next refire short-circuits. With the mutex, this is harmless.
 - **Rate limit.** Service files set `StartLimitIntervalSec=60s`, `StartLimitBurst=10` so a runaway path-trigger cycle backs off instead of crashing systemd.
-- **Headless ingest invocation:** `claude -p "/ingest INBOX/<file>" --permission-mode bypassPermissions --dangerously-skip-permissions`. Prompt also says "This is an automated headless ingest; proceed without waiting for confirmation."
-- **Backstop commit + push:** after each `claude -p` returns, if `git status --porcelain` is non-empty the wrapper does `git add -A && git commit -m "ingest | auto-backstop <file>" && git push origin unified`. `/ingest` is expected to handle this itself; the backstop is defense-in-depth.
+- **Headless ingest invocation:** `claude -p "/auto-ingest INBOX/<file>" --permission-mode bypassPermissions --dangerously-skip-permissions`. The `/auto-ingest` command's own spec (`.claude/commands/auto-ingest.md`) bakes in the no-questions/no-approval contract — no prompt addenda needed.
+- **Backstop commit + push:** after each `claude -p` returns, if `git status --porcelain` is non-empty the wrapper does `git add -A && git commit -m "auto-ingest | backstop <file>" && git push origin unified`. `/auto-ingest` is expected to handle this itself; the backstop is defense-in-depth.
 - **Log files.** `scripts/systemd/log/git-pull.log` and `scripts/systemd/log/inbox-ingest.log`, trimmed to last 2000 lines after each run. systemd journal additionally captures stdout/stderr via `StandardOutput=append:…` and `StandardError=append:…`.
 - **Logrotate** is out of scope — the in-script trim is sufficient for the expected volume.
 
@@ -370,11 +372,7 @@ while true; do
 
   log_to "$LOG" "begin: $path"
 
-  prompt="/ingest $path
-
-This is an automated headless ingest run from scripts/systemd/inbox-ingest.sh
-on the Ubuntu VM. Proceed through all phases without waiting for
-confirmation. Auto-commit and push on completion per the ingest spec."
+  prompt="/auto-ingest $path"
 
   if "$CLAUDE_BIN" -p "$prompt" \
         --permission-mode bypassPermissions \
@@ -388,11 +386,11 @@ confirmation. Auto-commit and push on completion per the ingest spec."
     exit "$rc"
   fi
 
-  # Backstop: if /ingest didn't commit, do it now.
+  # Backstop: if /auto-ingest didn't commit, do it now.
   if [ -n "$(git status --porcelain)" ]; then
     log_to "$LOG" "backstop: committing residual changes"
     git add -A
-    git commit -m "ingest | auto-backstop after $file" >> "$LOG" 2>&1 || true
+    git commit -m "auto-ingest | backstop after $file" >> "$LOG" 2>&1 || true
     git push origin unified >> "$LOG" 2>&1 || \
       log_to "$LOG" "backstop: push failed"
   fi
@@ -449,51 +447,27 @@ git commit -m "schema | add inbox-ingest script for ds-brain Linux systemd autom
 
 ---
 
-### Task 4: Add headless-mode note to /ingest command (idempotent)
+### Task 4: Verify `/auto-ingest` command is present
 
 **Files:**
-- Modify: `.claude/commands/ingest.md`
+- Verify: `.claude/commands/auto-ingest.md` exists (already committed in a prior change set)
 
-- [ ] **Step 1: Check whether the note already exists**
-
-```bash
-grep -q '## Headless / automated mode' .claude/commands/ingest.md && echo "already present" || echo "needs append"
-```
-
-If the macOS plan already added this section, the rest of this task is a no-op. Otherwise continue.
-
-- [ ] **Step 2: Append the headless-mode note**
-
-If the previous step said `needs append`, append at the end of `.claude/commands/ingest.md`:
-
-```markdown
-
-## Headless / automated mode
-
-If this command is invoked through `claude -p` (e.g. by
-`scripts/systemd/inbox-ingest.sh` on the Ubuntu VM, or by
-`scripts/cron/inbox-ingest.sh` on macOS), Step 2's "wait for go-ahead
-before continuing" gate is **skipped**. Proceed straight through Phase
-A → B → C → D using your best judgement on the destination tab. The
-automated run expects auto-commit + push to complete; do not stop and
-ask questions.
-
-Signals you are in headless mode:
-- The invoking prompt explicitly says "headless" / "automated" / "Proceed
-  without waiting for confirmation".
-- There is no human in the loop to answer.
-```
-
-- [ ] **Step 3: Commit (skip if no changes)**
+- [ ] **Step 1: Confirm the dedicated autonomous command exists**
 
 ```bash
-if git diff --quiet .claude/commands/ingest.md; then
-  echo "no changes — skipping commit"
-else
-  git add .claude/commands/ingest.md
-  git commit -m "schema | document /ingest headless mode for systemd automation"
-fi
+test -f .claude/commands/auto-ingest.md && head -n 5 .claude/commands/auto-ingest.md
 ```
+
+Expected: file present, frontmatter shows
+`description: Fully autonomous ingest …`. If absent, stop and create it
+before continuing — the systemd script depends on it. This command (a)
+removes Step 2's "wait for go-ahead" gate at the source, (b) bakes in
+autonomous tie-break rules, (c) tags its commits with the
+`auto-ingest |` op token so the audit trail in `wiki/Log/wiki-ops.md`
+distinguishes autonomous runs from human-driven `/ingest` runs.
+
+No prompt-engineering addenda are needed on the `claude -p` side — the
+command's own spec is the contract.
 
 ---
 
@@ -1054,11 +1028,11 @@ no longer needed.
 
 - **Spec coverage:**
   - "do git pull every 5 minutes" → Task 2 script + Task 5 `OnUnitActiveSec=5min` + `Persistent=true`.
-  - "run /ingest if a new file added to INBOX (except README.md)" → Task 3 `list_pending` excludes `README.md` and dotfiles + Task 5 `PathModified=` on `INBOX/`.
-  - "ingestion without questions to the user" → Task 4 documents headless mode in `/ingest`; Task 3 passes `--dangerously-skip-permissions` and an explicit "proceed without waiting for confirmation" prompt.
-  - "after ingestion, commit and push" → Task 3 trusts `/ingest`'s own auto-commit + push, with a backstop `git add -A && git commit && git push origin unified` if anything residual is left.
+  - "run auto-ingest if a new file added to INBOX (except README.md)" → Task 3 `list_pending` excludes `README.md` and dotfiles + Task 5 `PathModified=` on `INBOX/`.
+  - "ingestion without questions to the user" → dedicated `/auto-ingest` command (`.claude/commands/auto-ingest.md`) with autonomous tie-break rules and no approval gate; Task 3 invokes it via `claude -p` with `--dangerously-skip-permissions`.
+  - "after ingestion, commit and push" → `/auto-ingest` commits with op token `auto-ingest` and pushes; Task 3 wrapper has a backstop `git add -A && git commit && git push origin unified` if anything residual is left.
 - **Conservative defaults** (skip on dirty tree / wrong branch, fast-forward only, mutex with stale-guard, rate-limit `StartLimitBurst=10`, 10-file cap per fire) locked into the code in Tasks 2 and 3.
 - **Choice of systemd over alternatives** (cron + inotifywait, `claude` MCP CronCreate) justified in the Architecture block.
 - **Cross-platform `stat`** in `_lib.sh` so the scripts also run on a macOS dev box for one-off debugging.
 - **Idempotent install** so re-running `install.sh` after a template edit just replaces files and reloads.
-- **`Task 4` is idempotent** — won't double-append the headless-mode section if the macOS plan already added it.
+- **`Task 4` is a presence check, not a mutation** — `/auto-ingest` is a separate slash command rather than a headless-mode toggle on `/ingest`, so there is nothing to double-append and `/ingest`'s interactive contract is preserved.

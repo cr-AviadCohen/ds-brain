@@ -395,10 +395,10 @@ chmod +x scripts/cron/inbox-ingest.sh
 For now, temporarily move `INBOX/Strotz` out of the way so the empty path runs:
 
 ```bash
-mv INBOX/Strotz /tmp/Strotz.bak
+mv INBOX/Strotz Friedberg /tmp/Strotz Friedberg.bak
 ./scripts/cron/inbox-ingest.sh
 echo "exit=$?"
-mv /tmp/Strotz.bak INBOX/Strotz
+mv /tmp/Strotz Friedberg.bak INBOX/Strotz Friedberg
 ```
 
 Expected: exit 0, nothing appended to log (early no-op fires before any log line).
