@@ -6,7 +6,7 @@ kind: acquirer
 hq: Dallas, Texas, USA
 website: https://www.levelblue.com/
 related_teams: ["[[Spider Labs]]"]
-last_updated: 2026-05-12
+last_updated: 2026-05-18
 ---
 
 # LevelBlue
@@ -19,9 +19,9 @@ last_updated: 2026-05-12
 
 Managed security services (MSSP), consulting, DFIR, and detection
 content at MSP scale. Inherited from AT&T: managed services,
-consulting, Open Threat Exchange (OTX), AlienVault assets. 2025
+consulting, Open Threat Exchange ([[OTX]]), AlienVault assets. 2025
 acquisitions consolidated the field — [[Cybereason]], Alert Logic
-(Fortra), Aon Cybersecurity & IP Litigation (incl. Stroz Friedberg,
+(Fortra), Aon Cybersecurity & IP Litigation (incl. [[Stroz Friedberg]],
 Elysium Digital), [[Trustwave]] (incl. [[Spider Labs]]).
 
 ## Relationship to DS team
@@ -44,6 +44,9 @@ work.
   into the Level Blue portfolio.
 - 2025 — Alert Logic acquired from Fortra (operates as [[Alert Logic]]
   managed platform).
+- 2025-08 — Aon Cybersecurity & IP Litigation acquisition closed —
+  brought [[Stroz Friedberg]] (DFIR) and Elysium Digital into the
+  Level Blue portfolio.
 
 ## Key people
 
@@ -60,6 +63,8 @@ work.
 - [[Alert Logic]] — managed MDR/XDR/WAF platform (Fortra acquisition)
 - [[Mail Marshal]] — Trustwave email-security gateway (inherited)
 - [[Tipper]] — Spider Labs AI-powered threat-intel pipeline
+- [[OTX]] — AlienVault-origin Open Threat Exchange feed + backend
+- [[USMA]] — Unified Security Management (Anywhere) — AlienVault-origin MSSP platform
 
 ## Strategic partnerships
 

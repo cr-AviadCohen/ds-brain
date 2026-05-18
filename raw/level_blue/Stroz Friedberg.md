@@ -1,4 +1,4 @@
-LevelBlue acquired 'Stroz Friedberg'
+LevelBlue acquired 'Stroz Friedberg' company on August 2025.
 
 Stroz Friedberg Inc., founded in 2000, is a global firm specializing in digital risk management, digital forensics, cybercrime and data breach response, eDiscovery, business intelligence, and investigations.
 

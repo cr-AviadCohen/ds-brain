@@ -4,12 +4,30 @@ type: log
 tags: [log, wiki]
 direction: prepend (newest on top)
 append_only: true
-last_updated: 2026-05-13
+last_updated: 2026-05-18
 ---
 
 > **Append-only, prepend-order log.** New entries go directly below this
 > preamble (newest on top). Never edit or delete past entries — they are
 > the historical record. Same convention applies to `wiki/Log/pulse.md`.
+
+## [2026-05-18] ingest | Stroz Friedberg brief + Aviad/Inigo intro
+- wiki/Sources/Stroz Friedberg — LevelBlue Acquisition Brief.md (new)
+- wiki/Entities/Organizations/Stroz Friedberg.md (new) — DFIR sibling acquired by Level Blue 2025-08 via Aon deal
+- wiki/Entities/Organizations/New Mountain.md (new) — pre-Level-Blue PE investor in Stroz Friedberg
+- wiki/Entities/Organizations/LevelBlue.md (updated) — added Aon 2025-08 acquisition line; wikilinked [[Stroz Friedberg]] + [[OTX]] + [[USMA]] in Systems
+- wiki/Entities/Organizations/AlienVault.md (updated) — wikilinked [[OTX]] in Systems; dropped resolved open-question
+- wiki/Meetings/2026-05-14 — Aviad and Inigo intro.md (new) — backgrounds, OTX backend history, AWS account map, Bedrock vs SageMaker
+- wiki/Entities/Systems/OTX.md (new) — closes the AlienVault page's missing-OTX open-question; owner [[Inigo Lopez-Barranco]]
+- wiki/Entities/Systems/AWS Bedrock.md (new) — Agent Core surface, Hunter + Martin News stack
+- wiki/Entities/Systems/AWS SageMaker.md (new) — Inigo's historical platform, cost / lock-in cautions
+- wiki/Entities/People/Aviad Cohen.md (updated) — mention 2026-05-14 Inigo intro
+- wiki/Entities/People/Inigo Lopez-Barranco.md (updated) — full background (physics → trains → AlienVault → AT&T → LevelBlue); mention 2026-05-14
+- wiki/Entities/Projects/Martin News Chatbot.md (updated) — Bedrock Agent Core rationale, AWS account map (agent + KB in AlienVault OTX Account), 2026-05-14 mention
+- wiki/INDEX.md (updated) — new Orgs / Systems / Meetings / Sources rows
+- Files moved:
+  - INBOX/Strotz Friedberg → raw/level_blue/Stroz Friedberg.md
+  - INBOX/meeting_2025.05.14_aviad_inigo → raw/meetings/meeting_2026.05.14_aviad_inigo.txt (year fixed to match body 2026-05-14)
 
 ## [2026-05-13] lint | inline-code lint fix + 12 cross-refs + 15 new concept/system/research pages
 - tools/lint baseline: 4 → 3 (1 stale-link fixed via schema change, not content edit). 3 remaining orphans (INDEX/pulse/wiki-ops) are structural-by-design.

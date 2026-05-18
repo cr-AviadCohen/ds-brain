@@ -1,0 +1,38 @@
+- Meeting Date: May 14, 2026
+- Attendees: [[Aviad Cohen]], [[Inigo Lopez-Barranco]]
+
+## Meeting Summary
+This meeting serves as a detailed introductory and technical sync between Aviad (an AI Architect) and Inigo, focusing on their respective backgrounds, the complex history of the company's infrastructure, and current cloud architecture challenges.
+
+Here is a comprehensive summary of the meeting:
+
+**Professional Backgrounds**
+*   **Aviad:** Introduced himself as having 13 years of experience in cybersecurity research, specifically focusing on classic machine learning and Generative AI. He holds a PhD in Software and Information Systems Engineeting with a focus on malicious email detection, non-executable malware detection (like PDFs, Office documents and images), and previously worked at IBM Research developing network anomaly detections and an AI assistant for the QRadar SIEM. He has been with the company for over a year, having managed the data science team during Inbar's maternity leave before becoming the AI Architect.
+*   **Inigo:** Shared his unconventional path into cybersecurity. He has a master's in physics and electronic engineering and spent roughly 12 years developing embedded systems for trains, including building a highly secure "black box" for CCTV recordings following the train bombings in Madrid. He joined AlienVault in 2014, initially developing plugins and ingestion mechanisms, and later took Coursera classes to successfully build early machine learning systems for the company.
+
+**Company History and Inigo's Current Responsibilities**
+Inigo provided a brief history of the company's acquisitions: he joined AlienVault, which was later bought by AT&T, and eventually became Level Blue—meaning he changed companies three times without changing his job.
+
+Following the AT&T transition, the entire original OTX (Open Threat Exchange) team left the company. Consequently, Inigo was forced to take over all the backend sample and analysis systems they had built. Today, he manages over 100 microservices that collect, analyze, and store threat data for projects like malware trackers and the "Infrastructure of Interest" (IOI). Because of staffing shortages, Inigo's main focus is simply "keeping the lights on" rather than developing new features.
+
+**Infrastructure Challenges and Cloud Strategy**
+A major part of the discussion revolved around the team's cloud infrastructure:
+*   **Current State:** Roughly 90-95% of Inigo's systems run in AWS using ECS clusters. This architecture was built by the old OTX team from scratch before technologies like Docker Swarm or Kubernetes were standard in the company.
+*   **The EngOps Problem:** Because they operate on an older, separate infrastructure from the main engineering team, Inigo's team has to handle all their own EngOps (Engineering Operations).
+*   **Future Plans:** Inigo's long-term goal is to migrate away from proprietary AWS services (like ECS and SQS) and move toward platform-agnostic, managed services using Kubernetes and Kafka (or Redpanda). This would allow them to align with whatever the broader engineering team uses, whether that remains AWS or moves to OCI (Oracle Cloud).
+
+**AWS Bedrock, SageMaker, and The "Martin" Chatbot**
+Aviad brought up his current project: building the "Martin" AI chatbot using AWS Bedrock and Agent Core.
+*   Aviad prefers Bedrock's Agent Core because it allows for easy creation of agents, tool connections, and guardrails without needing to code everything from scratch in Python (which he had to do for his previous QRadar POC).
+*   Inigo admitted he hasn't used Agent Core, but shared his past experience with AWS SageMaker. He warned Aviad that while AWS ML frameworks eventually make deployment and versioning very easy, they have a steep learning curve, require you to surrender a lot of freedom to their specific workflows, and are highly expensive.
+
+**Navigating AWS Accounts and Access Issues**
+Aviad noted he is still waiting for full AWS and Confluence access. When trying to access Inigo's Confluence links during the call, Aviad found his new Level Blue Microsoft account was active but empty, which Inigo noted is pending an IT ticket to properly link his permissions.
+
+To help Aviad navigate the AWS environment once he gets access, Inigo clarified their highly confusing account structure:
+1.  **AlienVault ML Account:** Used for developing and training models (contains SageMaker pipelines).
+2.  **AlienVault OTX Account:** This is where the Martin AI agent and knowledge base currently live, as AWS requires the agent to be in the same account as the data it accesses.
+3.  **AlienVault Apps Account:** Ironically, this is where the actual OTX platform runs (Inigo joked this naming scheme is "to confuse the hackers").
+
+**Building an Organizational Map**
+As the meeting wrapped up, they discussed the overall confusion regarding who belongs to which team following the various mergers. Inigo confirmed that only his team (Santi, Jose) is originally from AlienVault, while Phil, Pawel, and Carl come from Trustwave, and others are merging in from Alert Logic. Aviad revealed he is compiling all this information into a consolidated organizational map, which Inigo strongly encouraged him to share with the entire department once finished, as everyone is currently feeling a bit lost.

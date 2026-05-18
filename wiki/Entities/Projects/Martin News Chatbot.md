@@ -10,7 +10,7 @@ systems: []
 related_decisions: ["[[2026-05-06 — DS Team Takes Over Spider Labs Orphaned Projects]]"]
 related_projects: ["[[Hunter]]"]
 raw_path: null
-last_updated: 2026-05-12
+last_updated: 2026-05-18
 ---
 
 # Martin News Chatbot
@@ -23,7 +23,9 @@ Take Jose's basic POC (knowledge base + MCP) and turn it into a full, production
 
 ## Approach
 
-DS team owns platform choice (handed off explicitly by Jose). Current direction: [[Guy Kassorla]] to explore the Martin News APIs + AWS Bedrock (same stack pattern as [[Hunter]]). POC architecture is knowledge-base + MCP; production target adds [[RAG]] over Martin News content plus the agent surface needed for cross-departmental use. Productionisation work blocked on the same Phoenix-engineering bandwidth limitation that gates [[AI Assistant]] and [[IRCA]] is not expected here because the deployment lives outside Phoenix.
+DS team owns platform choice (handed off explicitly by Jose). Current direction: [[Guy Kassorla]] to explore the Martin News APIs + [[AWS Bedrock]] Agent Core (same stack pattern as [[Hunter]]). Aviad's reasoning for Bedrock Agent Core: easy agent creation, native tool wiring, built-in guardrails — no need to hand-roll the orchestration in Python (which was the case for his earlier IBM QRadar POC). POC architecture is knowledge-base + MCP; production target adds [[RAG]] over Martin News content plus the agent surface needed for cross-departmental use. Productionisation work blocked on the same Phoenix-engineering bandwidth limitation that gates [[AI Assistant]] and [[IRCA]] is not expected here because the deployment lives outside Phoenix.
+
+AWS account layout (per [[Inigo Lopez-Barranco]], 2026-05-14): the Martin agent + its knowledge base currently live in the **AlienVault OTX Account** because AWS requires the Agent Core agent and its data to be in the same account. Training pipelines (SageMaker) sit in the **AlienVault ML Account**; the actual [[OTX]] platform runs in the **AlienVault Apps Account**.
 
 ## Status
 
@@ -44,6 +46,7 @@ active — seeded 2026-05-12 from [[2026-05-12 — Aviad and Jose intro]]. Hand-
 
 - 2026-05-12 — [[2026-05-12 — Aviad and Jose intro]] — Jose handed productionisation to Aviad's team; [[Guy Kassorla]] exploring APIs + AWS Bedrock; platform choice deferred pending AWS evaluation.
 - 2026-05-12 — [[2026-05-12 — Aviad and Guy DS Brain architecture]] — Aviad flagged that the collaborator team works in AWS Workspaces and exchanges code as zip files (no git) — material risk for any production hand-off requiring version-control discipline.
+- 2026-05-14 — [[2026-05-14 — Aviad and Inigo intro]] — Aviad confirmed [[AWS Bedrock]] Agent Core direction; Inigo (no Bedrock experience) flagged [[AWS SageMaker]] cost + lock-in risk as a general AWS-ML caution; AWS account map clarified (agent + KB in AlienVault OTX Account).
 
 ## Tensions
 

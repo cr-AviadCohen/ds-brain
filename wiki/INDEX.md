@@ -3,7 +3,7 @@ title: Wiki INDEX
 type: index
 tags: [index, wiki]
 generated: 2026-05-11
-last_updated: 2026-05-13
+last_updated: 2026-05-18
 ---
 
 # Wiki INDEX
@@ -114,6 +114,8 @@ One section per top-level folder.
 - [[AIAV]] — Cybereason's new event-based sensor — successor to [[Core]]; not yet deployed (gated on full [[Phoenix]] rollout).
 - [[Alert Logic]] — Managed MDR/XDR/WAF platform inherited by Level Blue via the 2025 Fortra acquisition — candidate DS-team scope (ML log-review pipeline) per Pawel.
 - [[Antimalware Scan Interface]] — Microsoft AMSI — script-engine pre-execution scan API consumed by [[NGAV]] + [[AIDRA]] + [[SFT-PS]].
+- [[AWS Bedrock]] — AWS managed-LLM + Agent Core runtime — production target for [[Hunter]] and candidate target for [[Martin News Chatbot]].
+- [[AWS SageMaker]] — AWS managed ML platform — historical home of [[Inigo Lopez-Barranco]]'s [[OTX]] training pipelines; flagged costly + framework-heavy.
 - [[Azure AI Foundry]] — Microsoft Azure's managed LLM service — the team's primary LLM provider for p...
 - [[BDP]] — Behavioral Document Protection — Cybereason's YARA-signature engine for malicious Office docs; mostly superseded by BDP-AI under [[NGAV]].
 - [[BigQuery]] — Google Cloud's serverless analytics warehouse — the team's primary store for ...
@@ -130,6 +132,7 @@ One section per top-level folder.
 - [[MITRE ATT&CK]] — Publicly maintained knowledge base of adversary tactics and techniques (plus ...
 - [[Mail Marshal]] — Trustwave's email-security gateway (now Level Blue) — candidate target for DS ML collaboration.
 - [[Observe]] — Observe-on-Snowflake (on AWS) — one of Cybereason's two current XDR data lake...
+- [[OTX]] — Open Threat Exchange — AlienVault-origin crowd-sourced threat-intel feed + >100-microservice ECS backend, now operated by [[LevelBlue]] and owned by [[Inigo Lopez-Barranco]].
 - [[Palo Alto]] — Palo Alto Networks suite — firewall + cloud security + Cortex XDR competitor referenced across Cybereason integration / interop docs.
 - [[Phoenix]] — Cybereason's cloud-hosted, multi-tenant EDR/XDR platform that ingests endpoin...
 - [[Redpanda]] — Kafka-compatible streaming-data platform — [[Phoenix]]'s primary event bus.
@@ -153,6 +156,8 @@ One section per top-level folder.
 - [[LevelBlue]] — World's largest pure-play MSSP — 2024 AT&T spinout that acquired [[Cybereason]] 2025-11-25.
 - [[Microsoft]] — Cloud + AI vendor hosting CR-AI deployments via [[Azure AI Foundry]]; Sentinel SIEM integration target.
 - [[MITRE]] — Standards body; steward of [[MITRE ATT&CK]] and contributor to [[STIX]].
+- [[New Mountain]] — US growth-PE firm; pre-Level Blue strategic investor in [[Stroz Friedberg]].
+- [[Stroz Friedberg]] — Global DFIR / digital-risk firm acquired by [[LevelBlue]] 2025-08 via the Aon Cybersecurity & IP Litigation deal.
 - [[Trustwave]] — MSSP acquired by [[LevelBlue]] 2025; brought [[Spider Labs]] and [[Mail Marshal]] into the portfolio.
 
 ## Entities/Teams
@@ -211,6 +216,7 @@ One section per top-level folder.
 - [[2026-05-07 — Sigma Interoperability brownbag]] — SLR Brownbag presenting the Sigma Interoperability project — a unified pipeli...
 - [[2026-05-12 — Aviad and Jose intro]] — Intro session covering backgrounds, Martin News Chatbot productionisation hand-off, abandoned Level Blue UEBA, and the shared engineering-bandwidth bottleneck.
 - [[2026-05-12 — Aviad and Guy DS Brain architecture]] — Architecture working session designing the team-wide rollout of [[DS Brain]] — locked unified branch + local-write-only-to-INBOX + server-as-sole-ingest-authority; Aviad conceded the split-branch proposal after Guy pushed back.
+- [[2026-05-14 — Aviad and Inigo intro]] — Intro + tech sync covering Inigo's [[AlienVault]] → [[AT&T]] → [[LevelBlue]] arc, [[OTX]] backend (>100 ECS microservices), AWS account map, and the [[Martin News Chatbot]] Bedrock-vs-SageMaker tradeoff.
 
 ## Decisions
 
@@ -238,6 +244,7 @@ One section per top-level folder.
 - [[data-science-team-knowledge]] — Internal DS-team Notion-style doc bundling stack overview (sensor / backend / XDR / Azure AI) + Q2 project tracker.
 - [[Karpathy — LLM Wiki Gist]] — The canonical specification for this vault. Andrej Karpathy proposes a three-...
 - [[LevelBlue — Acquisition of Cybereason]] — LevelBlue (a 2024 spinout from AT&T's cybersecurity division, majority-owned ...
+- [[Stroz Friedberg — LevelBlue Acquisition Brief]] — Short briefing on the August 2025 [[LevelBlue]] acquisition of [[Stroz Friedberg]] via the Aon Cybersecurity & IP Litigation deal.
 - [[2026-05-12 — Aviad and Guy DS Brain architecture]] — LLM-generated meeting summary of the Aviad ↔ Guy session that locked the team-wide [[DS Brain]] topology (unified branch, local-write-only-to-INBOX, server VM as sole ingest authority).
 
 ## Syntheses

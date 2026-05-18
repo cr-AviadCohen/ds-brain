@@ -6,7 +6,7 @@ kind: parent
 hq: San Mateo, California, USA
 acquired_by: ["[[AT&T]]"]
 acquired_on: 2018-08-22
-last_updated: 2026-05-12
+last_updated: 2026-05-18
 ---
 
 # AlienVault
@@ -32,9 +32,8 @@ Indirect / historical. AlienVault no longer exists as a standalone entity — th
 ## Systems
 
 - [[USMA]] — Unified Security Management (Anywhere); the original AlienVault SIEM/MSSP product, now operated by [[LevelBlue]]
-- OTX (Open Threat Exchange) — crowd-sourced threat-intel feed; now operated by [[LevelBlue]]
+- [[OTX]] — Open Threat Exchange crowd-sourced threat-intel feed; now operated by [[LevelBlue]] (>100-microservice backend inherited by [[Inigo Lopez-Barranco]])
 
 ## Open questions
 
 - Are any AlienVault-era products still branded as such anywhere in the Level Blue portfolio, or has the brand fully sunset?
-- What is the canonical OTX wiki page (if/when seeded) — it's currently only referenced indirectly via [[LevelBlue]] / [[AT&T]] history.
