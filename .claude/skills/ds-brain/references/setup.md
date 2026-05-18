@@ -45,7 +45,27 @@ Click path in GitHub:
 
 Optional: also add **Pull requests: Read and write** if you plan to have the skill open PRs for INBOX entries instead of direct commits.
 
+### Step 1a — Wait for IT / org approval
+
+Because `cybereason-labs` is an organization with fine-grained PAT approval enabled, generating the token does **not** grant access immediately. After clicking **Generate token** you will see a banner like:
+
+> *Your fine-grained personal access token has been created and is pending approval by the organization owners.*
+
+The token string is real and copy-able, but every API call will return `403 Forbidden — pending approval` until an org admin / IT approves the request.
+
+What to do:
+
+1. After clicking **Generate token**, GitHub auto-files a request to org admins.
+2. Notify IT / your team's GitHub admin out-of-band (Slack, email) that a `DS-Brain` fine-grained PAT request is pending for `cybereason-labs`. Include the token name and your GitHub handle so they can find it under **Organization settings → Personal access tokens → Pending requests**.
+3. **Wait for approval.** You will get an email from GitHub: *"Your personal access token request has been approved"*. Until that email arrives, do **not** continue to Step 2 — the MCP will register fine but every read/write will fail with `403`.
+4. If denied, the email will explain why; iterate with IT and regenerate (or request approval of the same token again from the **Pending requests** UI).
+
+You can check status any time at **GitHub user settings → Developer Settings → Personal Access Tokens → Fine-Grained Tokens → `DS-Brain`** — the row shows `Pending` / `Active` / `Denied`.
+
 ## Step 2 — Register the GitHub MCP
+
+> **Do not start this step until your token shows `Active` in the GitHub UI and you have received the approval email from GitHub.** Registering with a `Pending` token wastes time — `claude mcp list` may show `✓ Connected` (the MCP server itself starts) but every brain operation will fail with `403`.
+
 
 Replace the placeholder with your token from Step 1:
 
@@ -112,7 +132,16 @@ Your token is invalid, expired, or revoked. Regenerate per Step 1 and re-registe
 
 ### Write fails — `403 Forbidden`
 
-Your token lacks `Contents: Read and write` on `cybereason-labs/ds-brain`, **or** you aren't a collaborator on that repo. Fix the scope per Step 1. If you don't have collaborator access, ask the maintainer.
+Three possible causes — check in order:
+
+1. **PAT still pending org approval.** Most common right after onboarding. Fine-grained PATs against `cybereason-labs` require approval from an org admin / IT. Check status at **GitHub user settings → Developer Settings → Personal Access Tokens → Fine-Grained Tokens → `DS-Brain`**:
+   - `Pending` → IT hasn't approved yet. Ping IT / your team's GitHub admin. The token will not work until status flips to `Active` (you'll also receive an email: *"Your personal access token request has been approved"*).
+   - `Denied` → re-request approval from the **Pending requests** page or regenerate with adjusted scope.
+   - `Active` → move on to the next cause.
+2. **Wrong scope.** Token lacks `Contents: Read and write` on `cybereason-labs/ds-brain`. Fix per Step 1.
+3. **Not a collaborator.** You aren't a member / outside collaborator on `cybereason-labs/ds-brain`. Ask the maintainer to add you.
+
+Also: a read that worked yesterday but suddenly returns `403` today usually means the token's approval was revoked, expiration hit, or org policy changed. Check the Fine-Grained Tokens UI before regenerating.
 
 ### Write fails — `404 Not Found`
 
