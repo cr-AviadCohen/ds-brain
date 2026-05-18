@@ -3,12 +3,12 @@ title: Phoenix
 type: system
 tags: [system, wiki]
 owner: Cybereason
-related_projects: ["[[Phoenix Review]]", "[[RCE-NG]]", "[[Malop-Worthy]]", "[[Risk Assessment]]", "[[IRCA]]", "[[AI Assistant]]"]
+related_projects: ["[[Phoenix Review]]", "[[RCE-NG]]", "[[Malop-Worthy]]", "[[Risk Assessment]]", "[[IRCA]]", "[[AI Assistant]]", "[[Smart Asset Correlation]]"]
 seeds:
   - raw/cybereason/phoenix/summary-phoenix-server.md
   - raw/cybereason/phoenix/summary-phoenix-agent.md
   - raw/data_science_drive/data-science-main.md
-last_updated: 2026-05-13
+last_updated: 2026-05-18
 ---
 
 # Phoenix
@@ -42,11 +42,22 @@ Replaces the legacy Core backend. Core stored data graph-based in Transparency (
 
 ## Related entities
 
-[[Phoenix Review]], [[RCE-NG]], [[Malop-Worthy]], [[Risk Assessment]], [[IRCA]], [[AI Assistant]], [[Core]]
+[[Phoenix Review]], [[RCE-NG]], [[Malop-Worthy]], [[Risk Assessment]], [[IRCA]], [[AI Assistant]], [[Smart Asset Correlation]], [[Core]]
 
 Active ideas targeting Phoenix as deployment surface: [[Rebuild UEBA in Phoenix XDR]].
 
 Both [[IRCA]] and [[AI Assistant]] are presently deferred — Phoenix engineering bandwidth is the gating constraint per [[2026-05-12 — Aviad and Jose intro]].
+
+### Asset / identity data model (per [[Xin Tang]] 2026-05-18)
+
+Two-layer asset model exposed to all consumers:
+
+- **Instance layer** — raw vendor record (one per integration: AWS EC2, CrowdStrike EDR, Azure machine).
+- **Canonical layer** — unified physical asset (one per real-world machine / user).
+
+Two ingest paths: **Inventory** (vendor API ground truth) and **Discovered** (parsed from raw events). Inventory wins on conflict — Discovered never overwrites it.
+
+Phase 1 (exact-match merge) is owned by [[Phoenix Team]] under [[Xin Tang]]. Phase 2 / Mode 3 (behavioral inference) is owned by the DS team — see [[Smart Asset Correlation]]. Behavioral relations are written to a separate PostgreSQL/TB store, not ClickHouse.
 
 ## Open questions
 

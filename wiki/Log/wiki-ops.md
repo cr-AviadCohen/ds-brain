@@ -11,6 +11,28 @@ last_updated: 2026-05-18
 > preamble (newest on top). Never edit or delete past entries — they are
 > the historical record. Same convention applies to `wiki/Log/pulse.md`.
 
+## [2026-05-18] ingest | Smart Asset Correlation knowledge transfer
+- wiki/Meetings/2026-05-18 — Smart Asset Correlation knowledge transfer.md (new)
+- wiki/Entities/People/Xin Tang.md (new) — Phoenix data engineer / architect; owner of Phase 1 exact-match merge for [[Smart Asset Correlation]]
+- wiki/Entities/People/Adria.md (new) — Phoenix XDR PM; weekly-sync convener
+- wiki/Decisions/2026-05-18 — Python for Smart Asset Correlation Service.md (new)
+- wiki/Decisions/2026-05-18 — Pre-filter Rules Before ML on ClickHouse.md (new)
+- wiki/Decisions/2026-05-18 — Over-merge Preferred over Under-merge.md (new)
+- wiki/Entities/Projects/Smart Asset Correlation.md (heavy update) — expanded from stub: two-phase architecture, data model (Instance vs Canonical, Inventory vs Discovered), ClickHouse constraints, three new decisions, full risk + open-question pass
+- wiki/Entities/Systems/ClickHouse.md (updated) — single-node + ~15 PB constraint; added Smart Asset Correlation as related project
+- wiki/Entities/Systems/Phoenix.md (updated) — added asset / identity data-model section per Xin Tang; added Smart Asset Correlation as related project
+- wiki/Entities/People/Aviad Cohen.md (updated) — 2026-05-18 mention
+- wiki/Entities/People/Inbar Dekel.md (updated) — 2026-05-18 mention; added [[Smart Asset Correlation]] to related_projects
+- wiki/Entities/People/Guy Kassorla.md (updated) — 2026-05-18 mention; added [[Smart Asset Correlation]] to related_projects
+- wiki/Entities/People/Hen Ashkenazi.md (updated) — flagged in absentia as domain-expert bottleneck for behavioral filtering rules
+- wiki/Connections/identity-correlation-as-unsolved-hard-problem.md (updated) — added [[Smart Asset Correlation]] as fourth instance
+- wiki/INDEX.md (updated) — new People (Xin Tang, Adria), new Decisions x3, new Meeting, revised Smart Asset Correlation one-liner
+- Flagged for human review:
+  - [[Adria]] last name not captured in transcript — stub created; confirm at first weekly sync
+  - "TB" PostgreSQL database — full name + schema not yet captured; populate when Xin shares Confluence links
+- Files moved:
+  - INBOX/meeting_2026.05.18 - Smart Asset Correlation.md → raw/meetings/meeting_2026.05.18 - Smart Asset Correlation.md
+
 ## [2026-05-18] ingest | Stroz Friedberg brief + Aviad/Inigo intro
 - wiki/Sources/Stroz Friedberg — LevelBlue Acquisition Brief.md (new)
 - wiki/Entities/Organizations/Stroz Friedberg.md (new) — DFIR sibling acquired by Level Blue 2025-08 via Aon deal

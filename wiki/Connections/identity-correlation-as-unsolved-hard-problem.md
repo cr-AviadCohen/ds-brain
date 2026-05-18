@@ -2,8 +2,8 @@
 title: Identity correlation as the unsolved hard problem in cross-vendor security
 type: connection
 tags: [connection, wiki]
-instances: ["[[RCE-NG]]", "[[Incident Investigation (for Fusion 2)]]", "[[2026-04-30 — Aviad and Pawel intro]]"]
-last_updated: 2026-05-11
+instances: ["[[RCE-NG]]", "[[Incident Investigation (for Fusion 2)]]", "[[2026-04-30 — Aviad and Pawel intro]]", "[[Smart Asset Correlation]]"]
+last_updated: 2026-05-18
 ---
 
 # Identity correlation as the unsolved hard problem in cross-vendor security
@@ -15,6 +15,7 @@ last_updated: 2026-05-11
 - [[2026-04-30 — Aviad and Pawel intro]] — Pawel's "Correlate ML" effort stalled on missing unified identity management across ~4,000 clients; Aviad confirmed the same identity-resolution gap is blocking attack-story correlation on the Phoenix XDR project.
 - [[RCE-NG]] — Risk Chain Engine correlates detection events from multiple vendors (XDR) into a single attack story; its pivot to Phoenix as input source explicitly depends on Phoenix's detection schema and on bringing entities/IOCs into alignment.
 - [[Incident Investigation (for Fusion 2)]] — open issue called out directly: "missing entities/IOCs in vendor alerts (Sentinel, Defender, Cortex) significantly limit AI verdict accuracy"; the project needs structured Incident/Alert/Evidence schemas and additional enrichment APIs.
+- [[Smart Asset Correlation]] — explicit DS-owned attempt at the unified-identity layer for Phoenix. Two-phase architecture: deterministic exact-match merge (Phoenix Team, [[Xin Tang]]) + behavioral inference (DS team, Python service over [[ClickHouse]] → PostgreSQL/TB). Direct prerequisite for [[Phoenix]] automated MDR response. Decisions taken 2026-05-18 — see [[2026-05-18 — Smart Asset Correlation knowledge transfer]].
 
 ## What we infer
 

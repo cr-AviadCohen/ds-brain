@@ -4,6 +4,7 @@ type: index
 tags: [index, wiki]
 generated: 2026-05-11
 last_updated: 2026-05-18
+
 ---
 
 # Wiki INDEX
@@ -69,7 +70,9 @@ One section per top-level folder.
 - [[Tristan Magill-Neal]] — Sr Security Researcher in Security Research.
 - [[Tue Luu]] — Engineer-Cyber Threat in Engineering.
 - [[Winston Poniente]] — Engineer-Cyber Threat in Security Operations Center.
+- [[Xin Tang]] — Phoenix XDR data engineer / architect — owner of Phase 1 exact-match merge and data-model authority for [[Smart Asset Correlation]].
 - [[Ziv Mador]] — VP-Security Research in Security Research.
+- [[Adria]] — Phoenix XDR Product Manager; weekly-sync convener for [[Smart Asset Correlation]].
 
 ## Entities/Projects
 
@@ -101,7 +104,7 @@ One section per top-level folder.
 - [[Rules Quality]] — Agnostic DS workstream to measure + improve detection-rule quality across the stack (Q2 Medium, owners [[Itamar Hershko]] + [[Hen Ashkenazi]], TBD).
 - [[SFT-PS]] — Supervised Fine-Tuning for PowerShell — fine-tune an LLM for PowerShell class...
 - [[Security Posture]] — Create a new Security Posture feature based on Cybereason telemetry and GenAI.
-- [[Smart Asset Correlation]] — Phoenix-platform asset-correlation project (Q2 High, owner [[Itamar Hershko]], Jira ENG-9970, TBD).
+- [[Smart Asset Correlation]] — Phoenix-platform asset-correlation project (Q2 High, owner [[Itamar Hershko]], Jira ENG-9970) — Phase 1 exact-match merge by [[Xin Tang]] in progress; DS team owns Phase 2 / Mode 3 behavioral inference (Python service over [[ClickHouse]] → PostgreSQL/TB).
 - [[UEBA]] — Cybereason UEBA — POC not completed under [[Guy Kapach]] (lost in layoffs); the Cybereason implementation of [[UEBA (concept)]].
 - [[UEBA (USMA)]] — Historical Level Blue / USMA Unsupervised UBA — Jose Manuel Martin Rodriguez's prior work; abandoned ~2024 after AT&T DS turnover.
 - [[VOWL]] — Production-grade security vulnerability scanner that uses LLM-powered static ...
@@ -217,6 +220,7 @@ One section per top-level folder.
 - [[2026-05-12 — Aviad and Jose intro]] — Intro session covering backgrounds, Martin News Chatbot productionisation hand-off, abandoned Level Blue UEBA, and the shared engineering-bandwidth bottleneck.
 - [[2026-05-12 — Aviad and Guy DS Brain architecture]] — Architecture working session designing the team-wide rollout of [[DS Brain]] — locked unified branch + local-write-only-to-INBOX + server-as-sole-ingest-authority; Aviad conceded the split-branch proposal after Guy pushed back.
 - [[2026-05-14 — Aviad and Inigo intro]] — Intro + tech sync covering Inigo's [[AlienVault]] → [[AT&T]] → [[LevelBlue]] arc, [[OTX]] backend (>100 ECS microservices), AWS account map, and the [[Martin News Chatbot]] Bedrock-vs-SageMaker tradeoff.
+- [[2026-05-18 — Smart Asset Correlation knowledge transfer]] — [[Xin Tang]] Phoenix knowledge-transfer to DS team on the asset / identity data model; DS team cleared to build Phase 2 / Mode 3 behavioral-inference service in Python against [[ClickHouse]].
 
 ## Decisions
 
@@ -230,6 +234,9 @@ One section per top-level folder.
 - [[2026-05-12 — Unified Branch over Split for DS Brain]] — Adopt a single unified git branch for the team-wide [[DS Brain]] rollout; schema-layer protection moved from physical folder hiding to a Skill / system-prompt boundary on local Claudes.
 - [[2026-05-12 — Local Claude Write-Only to INBOX]] — Local Claude instances constrained to read `wiki/` for queries and write only into `INBOX/`; never mutate `raw/` or `wiki/`.
 - [[2026-05-12 — Server VM as Sole Ingest Authority]] — Shared Ubuntu VM hosts the ingest Claude as the only authority allowed to mutate `raw/` and `wiki/`; polls git, processes `INBOX/`, runs daily `/lint`.
+- [[2026-05-18 — Python for Smart Asset Correlation Service]] — DS team builds the Phase 2 / Mode 3 [[Smart Asset Correlation]] service in Python; async + DB-bound profile, no need for Rust.
+- [[2026-05-18 — Pre-filter Rules Before ML on ClickHouse]] — Domain-specific SQL pre-filter rules are mandatory before any ML pass on [[ClickHouse]] for [[Smart Asset Correlation]]; single-node cluster carries up to ~15 PB across ~2000 orgs.
+- [[2026-05-18 — Over-merge Preferred over Under-merge]] — In asset / identity correlation, prefer false-positive merges over false-negative merges because under-merging silently breaks [[Phoenix]] automated MDR response.
 
 ## Ideas
 
