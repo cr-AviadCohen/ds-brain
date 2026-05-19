@@ -45,6 +45,7 @@ research, Sigma rules, [[Tipper]] intel pipeline) and the
 
 - [[Mail Marshal]] — email-security gateway
 - [[Tipper]] — Spider Labs AI-powered threat-intel pipeline
+- **HML** — historical-malware-lookup database inherited from Trustwave; now integrated as an enrichment source inside [[Infrastructure of Interest]] (per 2026-05-14 SLR brownbag).
 
 ## Open questions
 

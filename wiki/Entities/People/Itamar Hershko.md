@@ -8,7 +8,7 @@ seeds: [raw/people/Itamar Hershko.md]
 related_projects: ["[[AIDRA]]", "[[DS Brain]]", "[[Owlint-Sigma]]", "[[Smart Asset Correlation]]", "[[Rules Quality]]"]
 location: [[Tel-Aviv]]
 first_seen: 2026-05-11
-last_updated: 2026-05-12
+last_updated: 2026-05-19
 ---
 
 # Itamar Hershko
@@ -25,6 +25,7 @@ Itamar Hershko is a Security Researcher in Engineering, based in Tel-Aviv, repor
 - 2026-05-07 — [[2026-05-07 — Sigma Interoperability brownbag]] — presented Sigma Interop AI automation; AWS production-traffic next step
 - 2026-05-11 — [[data-science-team-knowledge]] — owns [[AIDRA]] and [[Owlint-Sigma]] (incl. Tipper Collaboration) and [[Smart Asset Correlation]] (Phoenix); co-owns [[Rules Quality]] with [[Hen Ashkenazi]] per DS Team Q2 project tracker.
 - 2026-05-12 — [[2026-05-12 — Aviad and Guy DS Brain architecture]] — named as second onboardee for the team-wide [[DS Brain]] rollout (after Aviad + Guy verify the boundary Skill)
+- 2026-05-14 — [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — attended; [[Owlint-Sigma]] Tipper-collaboration track overlaps with IOI surface inside [[Tipper]] UI
 
 ## Related entities
 

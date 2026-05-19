@@ -5,10 +5,10 @@ tags: [person, wiki]
 role: Lead Cybersecurity
 org: Labs
 seeds: [raw/people/Jose Manuel Martin Rodriguez.md]
-related_projects: ["[[Martin News Chatbot]]", "[[UEBA (USMA)]]"]
+related_projects: ["[[Martin News Chatbot]]", "[[UEBA (USMA)]]", "[[Infrastructure of Interest]]"]
 location: [[Spain]]
 first_seen: 2026-05-11
-last_updated: 2026-05-12
+last_updated: 2026-05-19
 ---
 
 # Jose Manuel Martin Rodriguez
@@ -24,6 +24,7 @@ Jose Manuel Martin Rodriguez is a Lead Cybersecurity in Labs, based in Spain, re
 - 2026-05-06 — [[2026-05-06 — DS team and Santi handover]] — IOI campaign-clustering owner; knowledge-transfer partner for DS team
 - 2026-05-12 — [[2026-05-12 — Aviad and Jose intro]] — handed [[Martin News Chatbot]] productionisation to DS team; flagged abandoned USMA UEBA + Level Blue engineering bandwidth crisis; anti-AWS platform stance
 - 2026-05-12 — [[2026-05-12 — Aviad and Guy DS Brain architecture]] — referenced as [[Martin News Chatbot]] collaborator; collaborator team works in AWS Workspaces with zip-file code exchange (no git) — flagged as production hand-off risk
+- 2026-05-14 — [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — presented [[Infrastructure of Interest]] end-to-end: 4-stage pipeline, [[Themis]], [[Campaign Assembler]], 40–120d lead time; requested DS-team help on clustering
 
 ## Related entities
 

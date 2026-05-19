@@ -5,8 +5,8 @@ tags: [system, wiki]
 owner: Level Blue (Trustwave SpiderLabs heritage)
 vendor: Level Blue
 integration_surface: [threat-intel-pipeline, notification-feed]
-related_projects: ["[[Owlint-Sigma]]", "[[OWLINT]]", "[[AIDRA]]"]
-last_updated: 2026-05-12
+related_projects: ["[[Owlint-Sigma]]", "[[OWLINT]]", "[[AIDRA]]", "[[Infrastructure of Interest]]"]
+last_updated: 2026-05-19
 ---
 
 # Tipper
@@ -34,6 +34,7 @@ Per the Sigma Interoperability brownbag (2026-05-07): "Tipper already gives us e
 - Internal Level Blue / Trustwave SpiderLabs operations.
 - Collaboration target for [[Owlint-Sigma]] (Itamar Hershko lead) — Tipper signals automatically trigger Sigma rule emission and SIEM translation, no manual handoff.
 - Referenced by [[OWLINT]] proposal and [[AIDRA]] presentations as upstream intel source.
+- **Analyst UI surface for [[Infrastructure of Interest]]** — Tipper UI bundles IOI campaign objects (from [[Campaign Assembler]]) alongside the Sigma interop tool. SSO rollout to SLR + DS team in progress (per 2026-05-14 brownbag).
 
 ## Known issues
 

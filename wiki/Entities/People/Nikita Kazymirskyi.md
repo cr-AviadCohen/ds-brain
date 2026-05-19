@@ -8,7 +8,7 @@ seeds: [raw/people/Nikita Kazymirskyi.md]
 related_projects: []
 location: [[Tel-Aviv]]
 first_seen: 2026-05-11
-last_updated: 2026-05-11
+last_updated: 2026-05-19
 ---
 
 # Nikita Kazymirskyi
@@ -21,7 +21,7 @@ Nikita Kazymirskyi is a Sr Security Researcher in the Security Operations Center
 
 ## Mentions
 
-(populated by /ingest as sources are processed)
+- 2026-05-14 — [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — attended Jose's IOI deep-dive; requested [[Tipper]] / IOI UI access (pending SSO rollout)
 
 ## Related entities
 

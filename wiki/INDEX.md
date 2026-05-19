@@ -3,7 +3,7 @@ title: Wiki INDEX
 type: index
 tags: [index, wiki]
 generated: 2026-05-11
-last_updated: 2026-05-18
+last_updated: 2026-05-19
 
 ---
 
@@ -86,6 +86,7 @@ One section per top-level folder.
 - [[IRCA]] — Incident Response & Compromise Assessment — automated end-to-end IR flow that...
 - [[IRCA Cloud]] — Cloud-detections counterpart to IRCA — generates IRCA-style reports for cloud...
 - [[Incident Investigation (for Fusion 2)]] — Integration between Fusion 2 (central analyst platform) and Cybereason/LevelB...
+- [[Infrastructure of Interest]] — SLR proactive threat-infra pipeline: 1.5M+ stored domain observations, 200–800 high-confidence/day, 40–120d lead time vs. public attribution; surfaces via [[Tipper]].
 - [[MCP]] — Model Context Protocol server for Cybereason — routing logic and per-API tool...
 - [[Martin News Chatbot]] — Productionise the Martin News AI chatbot (KB + MCP POC) into a full company-wide application — handed from Spider Labs / Level Blue research to DS team.
 - [[META]] — `virustotalclassifier` — research codebase that uses the consensus of ~70 AV ...
@@ -114,6 +115,13 @@ One section per top-level folder.
 ## Entities/Systems
 
 - [[Active Directory]] — Microsoft AD — LDAP store + Kerberos KDC; identity backbone for [[IRCA]] + [[UEBA (USMA)]] + [[Rebuild UEBA in Phoenix XDR]].
+- [[Argus Collector]] — IOI fleet-telemetry collector — weekly OpenSearch hunts over [[USMA]] customer telemetry; exclusive moat.
+- [[Behavior Clustering]] — Unsupervised K-means on USM customer-telemetry time series; supplies *exponential* supply-chain-attack signal to [[Infrastructure of Interest]].
+- [[BestWhois Collector]] — IOI earliest-signal collector — new-domain registrations (3×/wk) with fuzzy + semantic + entropy/TLD submodules.
+- [[Campaign Assembler]] — Final IOI stage — clusters observations into investigation-ready campaigns (5 methodologies × 16 views, ≥4-view consensus).
+- [[CertStream Collector]] — IOI TLS-cert collector ([[Alejandro Prada Nespral]] WIP) — taps Certificate Transparency stream.
+- [[Themis]] — IOI multi-class classifier (benign / gray-benign / gray-malicious / malicious) — 90+ features, 6-model ensemble + meta-learner.
+- [[URL System]] — IOI internal URL-scan service — replaces public urlscan.io to avoid tipping attackers.
 - [[AIAV]] — Cybereason's new event-based sensor — successor to [[Core]]; not yet deployed (gated on full [[Phoenix]] rollout).
 - [[Alert Logic]] — Managed MDR/XDR/WAF platform inherited by Level Blue via the 2025 Fortra acquisition — candidate DS-team scope (ML log-review pipeline) per Pawel.
 - [[Antimalware Scan Interface]] — Microsoft AMSI — script-engine pre-execution scan API consumed by [[NGAV]] + [[AIDRA]] + [[SFT-PS]].
@@ -155,11 +163,13 @@ One section per top-level folder.
 - [[Anthropic]] — AI safety lab and vendor of the Claude family of LLMs powering Hunter, AI Assistant, AIDRA, OwlBot, and Pixel Agents.
 - [[AT&T]] — Historical parent of Level Blue (May 2024 cybersecurity-arm spinout with WillJam Ventures).
 - [[Cybereason]] — XDR/EDR/MDR vendor acquired by [[LevelBlue]] 2025-11-25; employer of record for the DS team.
+- [[Hunt.io]] — Third-party adversary-infra intel vendor — external benchmark for [[Infrastructure of Interest]] lead-time claims.
 - [[LangChain Inc]] — Vendor / OSS steward of [[LangGraph]] (DS-team agent orchestration runtime).
 - [[LevelBlue]] — World's largest pure-play MSSP — 2024 AT&T spinout that acquired [[Cybereason]] 2025-11-25.
 - [[Microsoft]] — Cloud + AI vendor hosting CR-AI deployments via [[Azure AI Foundry]]; Sentinel SIEM integration target.
 - [[MITRE]] — Standards body; steward of [[MITRE ATT&CK]] and contributor to [[STIX]].
 - [[New Mountain]] — US growth-PE firm; pre-Level Blue strategic investor in [[Stroz Friedberg]].
+- [[Recorded Future]] — Major commercial CTI vendor — IOI clocked a **177-day** lead over RF on one confirmed-malicious domain.
 - [[Stroz Friedberg]] — Global DFIR / digital-risk firm acquired by [[LevelBlue]] 2025-08 via the Aon Cybersecurity & IP Litigation deal.
 - [[Trustwave]] — MSSP acquired by [[LevelBlue]] 2025; brought [[Spider Labs]] and [[Mail Marshal]] into the portfolio.
 
@@ -180,6 +190,7 @@ One section per top-level folder.
 - [[Code Obfuscation]] — Static-evasion transforms (packing, encoding, control-flow flattening) — surface for [[AIDRA]] deobfuscation + [[SFT-PS]] + [[NGAV]] AMSI detection.
 - [[Command and Control]] — Attacker comms channel (HTTPS beacons, DNS tunnels, MQTT, domain-fronting) — IOC source for [[Tipper]] + [[Owlint-Sigma]] + [[AIDRA]].
 - [[Credential Theft]] — LSASS / DCSync / Kerberoasting / token-theft — escalation step weighted by [[IRCA]] + [[NGAV]] + [[AIDRA]].
+- [[DGA Detection]] — Detect Domain-Generation-Algorithm output via entropy + suspicious TLD + burst-registration triad inside [[BestWhois Collector]].
 - [[Identity Correlation]] — Cross-tenant/cross-vendor entity resolution — recurring bottleneck across Phoenix, RCE-NG, Fusion 2 work.
 - [[Lateral Movement]] — Cross-host pivot via RDP/WMI/SMB/PtH — spine of [[RCE-NG]] correlation graphs and [[XDR Correlation for Phoenix]].
 - [[LLM Hallucination]] — Models generating unsupported claims; the shared risk across every DS-team LLM-driven workflow.
@@ -195,6 +206,8 @@ One section per top-level folder.
 - [[Remote Desktop Protocol]] — Microsoft RDP — top interactive lateral-movement vector and UEBA anomaly source for [[UEBA (USMA)]] + [[Rebuild UEBA in Phoenix XDR]].
 - [[Sigma Rule Format]] — Open-source YAML detection rule schema; target output of [[Owlint-Sigma]], standard at [[Detection Engineering Hub]].
 - [[Suricata Signatures]] — Open-source IDS/IPS rule format consumed by [[USMA]] and generated by [[Hunter]]'s agentic workflow; [[Jose Manuel Martin Rodriguez]]'s 10-yr authorship surface.
+- [[Supply Chain Attack Detection]] — Exponential fleet-usage signal of an unknown domain — captured by [[Behavior Clustering]] *exponential* cluster inside [[Infrastructure of Interest]].
+- [[Typosquatting Detection]] — Fuzzy Jaro-Winkler + embedding-semantic-similarity against known brand list — primary [[BestWhois Collector]] filter.
 - [[UEBA (concept)]] — User & Entity Behavior Analytics — detect anomalies in user/entity activity via unsupervised ML; umbrella concept above [[UEBA]] (Cybereason) and [[UEBA (USMA)]] (Level Blue).
 - [[Windows Management Instrumentation]] — WMI namespaces + event subscriptions — admin API doubling as [[Persistence]] + [[Lateral Movement]] surface.
 
@@ -221,6 +234,7 @@ One section per top-level folder.
 - [[2026-05-12 — Aviad and Guy DS Brain architecture]] — Architecture working session designing the team-wide rollout of [[DS Brain]] — locked unified branch + local-write-only-to-INBOX + server-as-sole-ingest-authority; Aviad conceded the split-branch proposal after Guy pushed back.
 - [[2026-05-14 — Aviad and Inigo intro]] — Intro + tech sync covering Inigo's [[AlienVault]] → [[AT&T]] → [[LevelBlue]] arc, [[OTX]] backend (>100 ECS microservices), AWS account map, and the [[Martin News Chatbot]] Bedrock-vs-SageMaker tradeoff.
 - [[2026-05-18 — Smart Asset Correlation knowledge transfer]] — [[Xin Tang]] Phoenix knowledge-transfer to DS team on the asset / identity data model; DS team cleared to build Phase 2 / Mode 3 behavioral-inference service in Python against [[ClickHouse]].
+- [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — [[Jose Manuel Martin Rodriguez]] deep-dive on the IOI proactive threat-infra pipeline; DS team invited to help on [[Campaign Assembler]] clustering.
 
 ## Decisions
 
@@ -253,6 +267,7 @@ One section per top-level folder.
 - [[LevelBlue — Acquisition of Cybereason]] — LevelBlue (a 2024 spinout from AT&T's cybersecurity division, majority-owned ...
 - [[Stroz Friedberg — LevelBlue Acquisition Brief]] — Short briefing on the August 2025 [[LevelBlue]] acquisition of [[Stroz Friedberg]] via the Aon Cybersecurity & IP Litigation deal.
 - [[2026-05-12 — Aviad and Guy DS Brain architecture]] — LLM-generated meeting summary of the Aviad ↔ Guy session that locked the team-wide [[DS Brain]] topology (unified branch, local-write-only-to-INBOX, server VM as sole ingest authority).
+- [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — Pre-summarized brownbag note shipped with raw transcript; first canonical record of the IOI pipeline + Campaign Assembler.
 
 ## Syntheses
 

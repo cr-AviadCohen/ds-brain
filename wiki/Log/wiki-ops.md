@@ -11,6 +11,40 @@ last_updated: 2026-05-18
 > preamble (newest on top). Never edit or delete past entries — they are
 > the historical record. Same convention applies to `wiki/Log/pulse.md`.
 
+## [2026-05-19] ingest | Infrastructure of Interest (SLR Brownbag)
+- wiki/Meetings/2026-05-14 — Infrastructure of Interest (SLR Brownbag).md (new)
+- wiki/Sources/2026-05-14 — Infrastructure of Interest (SLR Brownbag).md (new)
+- wiki/Entities/Projects/Infrastructure of Interest.md (new) — full IOI project page: 4-stage pipeline, 11 collectors, ~45 weighted flags, 1.5M+ observations, 40–120d lead time, DS-collab ask on Campaign Assembler
+- wiki/Entities/Systems/Themis.md (new) — multi-class 4-label classifier, 90+ features, 6-model ensemble + meta-learner
+- wiki/Entities/Systems/Behavior Clustering.md (new) — K-means on USM telemetry time series; massive/exponential/etc. clusters
+- wiki/Entities/Systems/Campaign Assembler.md (new) — 5 clustering methodologies × 16 views, ≥4-view consensus, 11-type taxonomy
+- wiki/Entities/Systems/BestWhois Collector.md (new) — 3×/wk WHOIS registration collector with fuzzy + semantic + entropy/TLD submodules
+- wiki/Entities/Systems/CertStream Collector.md (new) — Certificate Transparency collector ([[Alejandro Prada Nespral]] WIP)
+- wiki/Entities/Systems/Argus Collector.md (new) — weekly OpenSearch hunts over [[USMA]] telemetry; exclusive moat
+- wiki/Entities/Systems/URL System.md (new) — internal URL-scan service replacing public urlscan.io
+- wiki/Entities/Concepts/Typosquatting Detection.md (new)
+- wiki/Entities/Concepts/DGA Detection.md (new)
+- wiki/Entities/Concepts/Supply Chain Attack Detection.md (new)
+- wiki/Entities/Organizations/Hunt.io.md (new) — external attribution benchmark
+- wiki/Entities/Organizations/Recorded Future.md (new) — 177-day IOI lead time vs. RF
+- wiki/Entities/People/Jose Manuel Martin Rodriguez.md (updated) — IOI presenter; added [[Infrastructure of Interest]] to related_projects
+- wiki/Entities/People/Santiago Cortes Diaz.md (updated) — IOI host; added [[Infrastructure of Interest]] + [[Tipper]] to related_projects
+- wiki/Entities/People/Aviad Cohen.md (updated) — 2026-05-14 mention; DS-collab offer on Campaign Assembler clustering
+- wiki/Entities/People/Itamar Hershko.md (updated) — 2026-05-14 mention; IOI/Owlint-Sigma overlap inside [[Tipper]]
+- wiki/Entities/People/Nikita Kazymirskyi.md (updated) — first mention; requested Tipper SSO
+- wiki/Entities/People/Shabtay Barel.md (updated) — first mention
+- wiki/Entities/People/Alejandro Prada Nespral.md (updated) — added IOI project + CertStream WIP
+- wiki/Entities/Systems/Tipper.md (updated) — added Tipper UI as analyst surface for IOI / Campaign Assembler; SSO rollout in progress
+- wiki/Entities/Organizations/Trustwave.md (updated) — added HML as IOI enrichment source
+- wiki/INDEX.md (updated) — 1 new Project, 7 new Systems, 3 new Concepts, 2 new Orgs, 1 new Meeting, 1 new Source
+Files moved:
+- INBOX/meeting - 2026.05.14 - Infrastructure of Interest.md → raw/meetings/meeting_2026-05-14_infrastructure_of_interest.md
+Flagged for human review:
+- "Mute" 3rd-party collector identity not confirmed in source — vendor/feed name unclear.
+- "MartineNews" mentioned by Santi as sales/MVR companion to Tipper — distinct from existing [[Martin News Chatbot]]; no canonical wiki page created (defer pending clarification).
+- 16-view breakdown of Campaign Assembler not fully enumerated; only 5 clustering methodologies named (source itself flags one methodology unnamed).
+- Existing Tipper page classified as System; new [[Infrastructure of Interest]] page also lists Tipper as a System. Tipper increasingly behaves as a platform/project — may need re-typing in a future schema pass.
+
 ## [2026-05-18] ingest | Smart Asset Correlation knowledge transfer
 - wiki/Meetings/2026-05-18 — Smart Asset Correlation knowledge transfer.md (new)
 - wiki/Entities/People/Xin Tang.md (new) — Phoenix data engineer / architect; owner of Phase 1 exact-match merge for [[Smart Asset Correlation]]

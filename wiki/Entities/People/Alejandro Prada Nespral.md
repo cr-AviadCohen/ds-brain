@@ -5,10 +5,10 @@ tags: [person, wiki]
 role: Sr Specialist Cybersecurity
 org: Labs
 seeds: [raw/people/Alejandro Prada Nespral.md]
-related_projects: []
+related_projects: ["[[Infrastructure of Interest]]"]
 location: [[Spain]]
 first_seen: 2026-05-11
-last_updated: 2026-05-11
+last_updated: 2026-05-19
 ---
 
 # Alejandro Prada Nespral
@@ -21,7 +21,7 @@ Alejandro Prada Nespral is a Sr Specialist Cybersecurity in Labs, based in Spain
 
 ## Mentions
 
-(populated by /ingest as sources are processed)
+- 2026-05-14 — [[2026-05-14 — Infrastructure of Interest (SLR Brownbag)]] — building new [[CertStream Collector]] for [[Infrastructure of Interest]] (WIP)
 
 ## Related entities
 
