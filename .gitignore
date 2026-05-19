@@ -17,6 +17,7 @@
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 .obsidian/plugins/
+.obsidian/community-plugins.json
 tools/__pycache__/
 tools/lint/__pycache__/
 tools/lint/tests/__pycache__/
