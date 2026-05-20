@@ -59,7 +59,7 @@ jobs:
     model: claude-opus-4-7
     bot_branch_prefix: auto-ingest
     commit_op_token: auto-ingest
-    pr_title_prefix: "PR Auto-Inject - "
+    pr_title_prefix: "PR Auto-Inject | "
     caps:
       max_files_changed: 20
       max_lines_changed: 2000
@@ -75,10 +75,10 @@ jobs:
     calendar: "Sun 03:00"
     claude_command: auto-lint
     # Routine maintenance — cheaper model is fine, can promote to Opus later.
-    model: claude-sonnet-4-6
+    model: claude-opus-4-7 # claude-sonnet-4-6
     bot_branch_prefix: auto-lint
     commit_op_token: auto-lint
-    pr_title_prefix: "PR Auto-Lint - "
+    pr_title_prefix: "PR Auto-Lint | "
     caps:
       max_files_changed: 100
       max_lines_changed: 5000
