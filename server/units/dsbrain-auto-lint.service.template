@@ -1,0 +1,19 @@
+[Unit]
+Description=ds-brain: weekly autonomous wiki lint via Claude headless
+Documentation=https://github.com/cybereason-labs/ds-brain
+ConditionPathIsDirectory=__REPO_PATH__/wiki
+
+[Service]
+Type=oneshot
+WorkingDirectory=__REPO_PATH__/server
+Environment=PATH=__HOME_PATH__/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HOME=__HOME_PATH__
+ExecStart=__UV_BIN__ run python jobs/auto_lint.py
+StandardOutput=append:__REPO_PATH__/server/state/logs/auto_lint.systemd.log
+StandardError=append:__REPO_PATH__/server/state/logs/auto_lint.systemd.log
+
+# Lint can run for many minutes (5 LLM checks sequentially + edits).
+TimeoutStartSec=60min
+
+StartLimitIntervalSec=60
+StartLimitBurst=3

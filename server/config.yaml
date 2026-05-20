@@ -1,47 +1,29 @@
-# ds-brain server config — single source of truth for the auto-ingest daemon.
-# Edit, then re-run `uv run python setup.py` to apply schedule changes.
+# ds-brain server config — single source of truth for the auto-* daemons.
+# Edit, then re-run `uv run python setup.py` to apply schedule + unit changes.
 
 repo:
   branch: unified
   remote: origin
-  # Paths the auto-ingest PR is allowed to touch. Diff exceeding this
-  # set → skip auto-merge, label PR `needs-review`.
-  path_allowlist:
-    - "wiki/**"
-    - "raw/**"
-    - "INBOX/**"
 
-schedule:
-  # Single timer: auto_ingest does git pull internally, then checks INBOX.
-  auto_ingest_interval_minutes: 5
-
+# Shared Claude runtime defaults. Per-job `model` overrides `claude.model`.
 claude:
-  # Slash command (without leading slash) that the runner invokes.
-  command: auto-ingest
   # bypassPermissions keeps PreToolUse hooks (guard_immutable.py) active.
   # Avoid --dangerously-skip-permissions unless absolutely required.
   permission_mode: bypassPermissions
-  timeout_minutes: 20
-  # Resolved at runtime if absent — `command -v claude`.
+  timeout_minutes: 30
   claude_bin: claude
+  # Default model if a job doesn't override. `null` = use the `claude` CLI default.
+  # Available models: claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5-20251001
+  model: null
 
 git:
   pull_strategy: ff-only
-  bot_branch_prefix: auto-ingest
-  commit_op_token: auto-ingest
 
 pr:
-  # PR title format: "<title_prefix><description>"
-  title_prefix: "PR Auto-Inject - "
   auto_merge: true
   merge_strategy: squash   # squash | merge | rebase
   needs_review_label: needs-review
   gh_bin: gh
-
-# Blast-radius gate applied BEFORE auto-merge.
-caps:
-  max_files_changed: 20
-  max_lines_changed: 2000
 
 inbox:
   dir: INBOX
@@ -54,13 +36,55 @@ logging:
   trim_lines: 2000
 
 mutex:
+  # Shared by every job. Ensures auto_ingest and auto_lint never run
+  # concurrently and can't collide with a manual /ingest or /lint session.
   lock_dir: server/state/.lock
   stale_seconds: 1800
 
 ledger:
-  # Content-hash keyed processed-files store. Survives git pulls
-  # rewriting INBOX/ from other authors.
+  # Content-hash keyed processed-files store (auto-ingest only).
   path: server/state/processed.json
+
+# ---------------------------------------------------------------------------
+# Jobs. Each job runs via its own systemd timer; shape is uniform so adding a
+# third job (e.g. a Slack source-puller) follows the same pattern.
+# ---------------------------------------------------------------------------
+jobs:
+  auto_ingest:
+    enabled: true
+    # Repeating timer cadence.
+    interval_minutes: 5
+    claude_command: auto-ingest
+    # Quality-critical content writes — keep on Opus by default.
+    model: claude-opus-4-7
+    bot_branch_prefix: auto-ingest
+    commit_op_token: auto-ingest
+    pr_title_prefix: "PR Auto-Inject - "
+    caps:
+      max_files_changed: 20
+      max_lines_changed: 2000
+    path_allowlist:
+      - "wiki/**"
+      - "raw/**"
+      - "INBOX/**"
+
+  auto_lint:
+    enabled: true
+    # Weekly calendar trigger. VM should run UTC; this is the user-manager's
+    # local time (which equals UTC when the host clock is UTC).
+    calendar: "Sun 03:00"
+    claude_command: auto-lint
+    # Routine maintenance — cheaper model is fine, can promote to Opus later.
+    model: claude-sonnet-4-6
+    bot_branch_prefix: auto-lint
+    commit_op_token: auto-lint
+    pr_title_prefix: "PR Auto-Lint - "
+    caps:
+      max_files_changed: 100
+      max_lines_changed: 5000
+    # Lint must not touch raw/ or INBOX/ — only wiki/ synthesis layer.
+    path_allowlist:
+      - "wiki/**"
 
 sources:
   # Future: Slack/Gmail/Granola/RSS source pullers drop files into INBOX.

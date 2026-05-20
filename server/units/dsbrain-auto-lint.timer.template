@@ -1,0 +1,11 @@
+[Unit]
+Description=ds-brain: fire auto-lint on calendar (default Sun 03:00)
+
+[Timer]
+Unit=dsbrain-auto-lint.service
+OnCalendar=__CALENDAR__
+AccuracySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

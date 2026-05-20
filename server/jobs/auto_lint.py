@@ -1,34 +1,29 @@
-"""Auto-ingest entry point.
+"""Auto-lint entry point.
 
-Flow per fire (5-min systemd timer):
-  1. Acquire mutex.
+Flow per fire (weekly systemd calendar timer, default Sun 03:00):
+  1. Acquire shared mutex (same lock_dir as auto_ingest — never run concurrently).
   2. Verify on branch `unified`, tree clean.
   3. `git pull --ff-only origin unified`.
-  4. List INBOX/ pending files (filter ignore patterns).
-  5. For each pending file:
-       a. Content-hash → ledger lookup; skip if already processed.
-       b. `git checkout -b auto-ingest/<ts>-<short-sha>` from unified.
-       c. Invoke `claude -p "/auto-ingest <path>"` (model per config).
-       d. Inspect resulting diff vs base unified:
-            - file count cap
-            - line count cap
-            - path allowlist
-          Exceed any → push branch + open PR with `needs-review` label,
-          skip auto-merge.
-          Else → push branch + open PR + `--auto --squash`.
-       e. Record hash in ledger.
-       f. Checkout unified, delete local bot branch.
-  6. Release mutex.
+  4. Create bot branch `auto-lint/<ts>-<short-sha>` from unified.
+  5. Invoke `claude -p "/auto-lint"` (model per config — defaults to Sonnet).
+  6. Inspect resulting diff vs unified:
+       - file count cap
+       - line count cap
+       - path allowlist (default: wiki/** only)
+     Exceed any → push + open PR with `needs-review` label.
+     Else → push + open PR + `--auto --squash`.
+  7. No-diff (lint had nothing to do) → cleanup, exit 0.
+  8. Checkout unified, delete local bot branch.
+  9. Release mutex.
 
-Idempotent. Crash-safe: ledger updates after PR open, so a crash mid-
-ingest just retries the file next fire (Claude session was wasted but
-no double-commit).
+No ledger — lint is idempotent on its own; an extra fire that finds the
+same issues already fixed by the previous run produces a no-diff and
+skips PR creation.
 """
 
 from __future__ import annotations
 
 import datetime as dt
-import fnmatch
 import sys
 import traceback
 from pathlib import Path
@@ -38,7 +33,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from lib import config as cfg_mod
 from lib import git_safe, pr as pr_mod
 from lib.claude_runner import run_slash
-from lib.ledger import Ledger, sha256_of
 from lib.logging import Logger
 from lib.mutex import LockBusy, Mutex
 
@@ -46,70 +40,38 @@ from lib.mutex import LockBusy, Mutex
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def list_pending(inbox_dir: Path, ignore: list[str]) -> list[Path]:
-    if not inbox_dir.exists():
-        return []
-    out: list[Path] = []
-    for entry in sorted(inbox_dir.iterdir()):
-        name = entry.name
-        if any(fnmatch.fnmatch(name, pat) for pat in ignore):
-            continue
-        if not entry.is_file():
-            continue
-        out.append(entry)
-    return out
-
-
 def bot_branch_name(prefix: str, short_sha: str) -> str:
     ts = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S")
     return f"{prefix}/{ts}-{short_sha}"
 
 
-def short_description(file_path: Path) -> str:
-    return file_path.stem.replace("_", " ").replace("-", " ")[:80]
-
-
-def process_one(
-    file: Path,
+def run_lint(
     cfg: cfg_mod.Config,
     job: cfg_mod.JobConfig,
     logger: Logger,
-    ledger: Ledger,
 ) -> None:
-    rel = file.relative_to(REPO_ROOT)
-    content_hash = sha256_of(file)
-
-    if ledger.has(content_hash):
-        logger.log(f"skip (ledger hit): {rel}")
-        return
-
     base_sha = git_safe.short_sha(REPO_ROOT)
     branch = bot_branch_name(job.bot_branch_prefix, base_sha)
-    logger.log(f"begin: {rel} → branch {branch} (model={job.model or 'default'})")
+    logger.log(f"begin: lint → branch {branch} (model={job.model or 'default'})")
 
     git_safe.checkout_new_branch(REPO_ROOT, branch)
     try:
         rc, out, err = run_slash(
             claude_bin=cfg.claude_bin,
             command=job.claude_command,
-            arg=str(rel),
+            arg="",  # /auto-lint takes no args
             cwd=REPO_ROOT,
             permission_mode=cfg.claude_permission_mode,
             timeout_seconds=cfg.claude_timeout_seconds,
             model=job.model,
         )
         if rc != 0:
-            logger.log(f"claude rc={rc}: {rel} — stderr tail: {err[-500:]}")
-            git_safe.checkout(REPO_ROOT, cfg.branch)
-            git_safe.delete_local_branch(REPO_ROOT, branch)
+            logger.log(f"claude rc={rc}: lint — stderr tail: {err[-500:]}")
             return
 
         n_files, n_lines, paths = git_safe.diff_against(REPO_ROOT, cfg.branch)
         if n_files == 0:
-            logger.log(f"noop (no diff): {rel} — recording ledger hit anyway")
-            ledger.record(content_hash, str(rel), pr_url=None)
-            git_safe.checkout(REPO_ROOT, cfg.branch)
-            git_safe.delete_local_branch(REPO_ROOT, branch)
+            logger.log("clean: lint produced no changes")
             return
 
         in_allow, offenders = git_safe.paths_within_allowlist(paths, job.path_allowlist)
@@ -121,14 +83,13 @@ def process_one(
 
         git_safe.push_branch(REPO_ROOT, cfg.remote, branch)
 
-        desc = short_description(file)
-        title = f"{job.pr_title_prefix}{desc}"
+        ts = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
+        title = f"{job.pr_title_prefix}{ts}"
         body_lines = [
-            f"Auto-ingest of `{rel}`.",
+            f"Weekly auto-lint run.",
             "",
             f"- files changed: {n_files}",
             f"- lines changed: {n_lines}",
-            f"- content sha256: `{content_hash}`",
             f"- model: `{job.model or 'default'}`",
         ]
         if cap_exceeded:
@@ -152,17 +113,15 @@ def process_one(
 
         if cap_exceeded:
             pr_mod.add_label(REPO_ROOT, pr_url, cfg.pr_needs_review_label, gh_bin=cfg.gh_bin)
-            logger.log(f"needs-review: {rel} → {pr_url}")
+            logger.log(f"needs-review: lint → {pr_url}")
         else:
             if cfg.pr_auto_merge:
                 pr_mod.enable_auto_merge(
                     REPO_ROOT, pr_url, strategy=cfg.pr_merge_strategy, gh_bin=cfg.gh_bin
                 )
-                logger.log(f"auto-merge enabled: {rel} → {pr_url}")
+                logger.log(f"auto-merge enabled: lint → {pr_url}")
             else:
-                logger.log(f"PR opened (manual merge): {rel} → {pr_url}")
-
-        ledger.record(content_hash, str(rel), pr_url=pr_url)
+                logger.log(f"PR opened (manual merge): lint → {pr_url}")
     finally:
         try:
             git_safe.checkout(REPO_ROOT, cfg.branch)
@@ -173,16 +132,15 @@ def process_one(
 
 def main() -> int:
     cfg = cfg_mod.load()
-    job = cfg.auto_ingest
+    job = cfg.auto_lint
     if not job.enabled:
         return 0
 
-    logger = Logger(cfg.log_dir / "auto_ingest.log", trim_lines=cfg.log_trim_lines)
+    logger = Logger(cfg.log_dir / "auto_lint.log", trim_lines=cfg.log_trim_lines)
     mutex = Mutex(cfg.lock_dir, stale_seconds=cfg.mutex_stale_seconds)
-    ledger = Ledger(cfg.ledger_path)
 
     try:
-        mutex.acquire("auto_ingest")
+        mutex.acquire("auto_lint")
     except LockBusy:
         logger.log("skip: lock busy")
         return 0
@@ -204,16 +162,11 @@ def main() -> int:
             logger.log(f"git pull failed: {e}")
             return 1
 
-        pending = list_pending(cfg.inbox_dir, cfg.inbox_ignore)
-        if not pending:
-            return 0
-
-        for file in pending:
-            try:
-                process_one(file, cfg, job, logger, ledger)
-            except Exception as e:
-                logger.log(f"error processing {file.name}: {e}\n{traceback.format_exc()}")
-                continue
+        try:
+            run_lint(cfg, job, logger)
+        except Exception as e:
+            logger.log(f"error during lint: {e}\n{traceback.format_exc()}")
+            return 1
         return 0
     finally:
         mutex.release()

@@ -32,15 +32,17 @@ read/write the same repo.
 | --- | --- | --- |
 | Raw | `raw/`, `INBOX/` | Humans (immutable to Claude — guarded by PreToolUse hook) |
 | Wiki | `wiki/{Entities,Meetings,Decisions,Ideas,Research,Syntheses,Sources,Connections,🔥 Hot Notes,🗺️ Maps,📦 Archive,Memories,Log}/` | Claude |
-| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `scripts/` | DS leadership + Claude |
+| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `scripts/`, `server/` | DS leadership + Claude |
 
-## Tooling (`scripts/` and `tools/`)
+## Tooling (`scripts/`, `tools/`, `server/`)
 
 - `scripts/hooks/guard_immutable.py` — PreToolUse guard blocking writes to
   `raw/` and `INBOX/`
 - `tools/lint/run_all.py` — deterministic lint (frontmatter / orphans /
   stale links) with thread-pooled fan-out
 - `tools/convert/` — `.docx` and `.xlsx` → Markdown converters for ingest
+- `server/` — Ubuntu VM automation runtime: systemd-driven `auto-ingest`
+  (every 5 min) + `auto-lint` (weekly). See `server/README.md`.
 
 ## Triggers
 
@@ -48,8 +50,11 @@ read/write the same repo.
   files
 - **PreToolUse (Bash, Write, Edit)** — `scripts/hooks/guard_immutable.py`
   enforces raw/ immutability
-- **Weekly cron (Ubuntu VM)** — `scripts/cron/weekly-lint.sh` runs
-  `claude -p "/lint"` every Sunday 03:00 UTC
+- **Ubuntu VM (systemd user timers)** — `server/jobs/auto_ingest.py` every
+  5 min ingests new `INBOX/` files via `claude -p "/auto-ingest …"`;
+  `server/jobs/auto_lint.py` weekly (Sun 03:00) runs `claude -p "/auto-lint"`.
+  Both open `PR Auto-Inject - …` / `PR Auto-Lint - …` PRs and auto-squash-merge
+  when blast-radius caps pass.
 
 ## License
 

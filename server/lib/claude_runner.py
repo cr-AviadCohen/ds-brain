@@ -16,15 +16,22 @@ def run_slash(
     arg: str,
     cwd: Path,
     permission_mode: str = "bypassPermissions",
-    timeout_seconds: int = 1200,
+    timeout_seconds: int = 1800,
+    model: str | None = None,
 ) -> tuple[int, str, str]:
-    """Invoke `claude -p "/<command> <arg>"`. Returns (rc, stdout, stderr)."""
-    prompt = f"/{command} {arg}"
+    """Invoke `claude -p "/<command> <arg>"`. Returns (rc, stdout, stderr).
+
+    If `model` is non-empty, passes `--model <model>` so the per-job model
+    config in server/config.yaml is honoured.
+    """
+    prompt = f"/{command} {arg}".rstrip()
     args = [
         claude_bin,
         "-p", prompt,
         "--permission-mode", permission_mode,
     ]
+    if model:
+        args += ["--model", model]
     try:
         r = subprocess.run(
             args,

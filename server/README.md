@@ -2,11 +2,12 @@
 
 Scheduled automation for the ds-brain vault on a long-running Ubuntu VM.
 
-A single `systemd --user` timer fires every N minutes, pulls the latest
-`origin/unified`, scans `INBOX/` for new files, and for each file runs
-`/auto-ingest` in a fresh `claude -p` session, opens a PR titled
-`PR Auto-Inject - <description>`, and enables `--auto --squash` if the
-diff stays inside configured blast-radius caps.
+Two `systemd --user` timers run on the VM:
+
+- **`dsbrain-auto-ingest.timer`** — every N minutes (default 5). Pulls `origin/unified`, scans `INBOX/`, runs `/auto-ingest` per pending file in a fresh `claude -p` session, opens `PR Auto-Inject - <description>`, auto-squash-merges if caps pass.
+- **`dsbrain-auto-lint.timer`** — calendar (default Sun 03:00). Pulls `origin/unified`, runs `/auto-lint` in a fresh `claude -p` session, opens `PR Auto-Lint - <YYYY-MM-DD>`, auto-squash-merges if caps pass.
+
+Both jobs share one mutex — never run concurrently. Both honour per-job model selection (`claude-opus-4-7`, `claude-sonnet-4-6`, etc.) configured in `config.yaml`.
 
 ---
 
@@ -30,7 +31,9 @@ diff stays inside configured blast-radius caps.
 
 ## How it works (one fire)
 
-Each tick of the systemd timer runs `jobs/auto_ingest.py`. Per fire:
+### Auto-ingest (every 5 min by default)
+
+Each tick of `dsbrain-auto-ingest.timer` runs `jobs/auto_ingest.py`. Per fire:
 
 1. **Acquire mutex** at `server/state/.lock/`. Stale lock (>30 min) is stolen.
 2. **Sanity-check repo state.** Branch must be `unified`, working tree clean. Skip otherwise.
@@ -53,6 +56,24 @@ Each tick of the systemd timer runs `jobs/auto_ingest.py`. Per fire:
 6. **Release mutex.**
 
 Idempotent. Crash-safe: ledger updated only after PR open, so a crash mid-ingest retries the file next fire (one Claude session wasted, no double-commit).
+
+### Auto-lint (weekly by default — Sun 03:00)
+
+Each tick of `dsbrain-auto-lint.timer` runs `jobs/auto_lint.py`. Per fire:
+
+1. Acquire shared mutex (waits if auto-ingest is running).
+2. Branch + clean check, `git pull --ff-only`.
+3. Create bot branch `auto-lint/<UTC-timestamp>-<short-sha>`.
+4. `claude -p "/auto-lint" --permission-mode bypassPermissions --model <auto_lint.model>`.
+5. Inspect diff vs `unified`:
+   - file count cap (default `100`)
+   - line count cap (default `5000`)
+   - path allowlist (default `wiki/**` only — lint must not touch `raw/` or `INBOX/`)
+6. No diff → cleanup, exit 0. Otherwise push branch + `gh pr create --title "PR Auto-Lint - YYYY-MM-DD"`.
+7. Caps passed → `--auto --squash`. Caps exceeded → label `needs-review`.
+8. Checkout `unified`, delete local bot branch. Release mutex.
+
+No ledger — lint is naturally idempotent. A re-run with nothing left to fix produces no diff and no PR.
 
 ---
 
@@ -239,22 +260,38 @@ Expected within a few minutes: `begin: …`, `claude rc=0`, `auto-merge enabled:
 
 ## Configuration
 
-Everything lives in `server/config.yaml`. See the inline comments there for full schema. Key knobs:
+Everything lives in `server/config.yaml`. See the inline comments there for full schema. The file has shared blocks (`repo`, `claude`, `git`, `pr`, `inbox`, `logging`, `mutex`, `ledger`) plus per-job blocks under `jobs:`.
+
+**Shared knobs:**
 
 | Key | Default | Meaning |
 |---|---|---|
-| `schedule.auto_ingest_interval_minutes` | `5` | Timer cadence |
-| `caps.max_files_changed` | `20` | Auto-merge blocked if diff touches more files |
-| `caps.max_lines_changed` | `2000` | Auto-merge blocked if diff exceeds this |
-| `repo.path_allowlist` | `wiki/** raw/** INBOX/**` | Auto-merge blocked if any changed path doesn't match |
-| `pr.title_prefix` | `PR Auto-Inject - ` | Prefix for every auto-generated PR title |
+| `claude.permission_mode` | `bypassPermissions` | Keeps PreToolUse hooks active |
+| `claude.timeout_minutes` | `30` | Hard timeout per `claude -p` call |
+| `claude.model` | `null` | Default model if a job doesn't override |
 | `pr.merge_strategy` | `squash` | `squash` / `merge` / `rebase` |
 | `pr.needs_review_label` | `needs-review` | Label applied when caps exceeded |
-| `claude.permission_mode` | `bypassPermissions` | Keeps PreToolUse hooks active |
-| `claude.timeout_minutes` | `20` | Hard timeout per `claude -p` call |
-| `mutex.stale_seconds` | `1800` | Stolen if held longer (30 min) |
+| `mutex.stale_seconds` | `1800` | Lock auto-stolen if held longer (30 min) |
 
-After editing, re-run `uv run python setup.py` to re-render unit files if you changed the schedule.
+**Per-job knobs** (`jobs.auto_ingest.*` and `jobs.auto_lint.*` have the same shape):
+
+| Key | auto_ingest default | auto_lint default | Meaning |
+|---|---|---|---|
+| `enabled` | `true` | `true` | Set `false` to skip the timer |
+| `interval_minutes` | `5` | — | Repeating timer cadence (ingest) |
+| `calendar` | — | `Sun 03:00` | systemd `OnCalendar` (lint) |
+| `claude_command` | `auto-ingest` | `auto-lint` | Slash command (no leading `/`) |
+| `model` | `claude-opus-4-7` | `claude-sonnet-4-6` | Per-job model. Set `null` to use `claude.model` default. |
+| `bot_branch_prefix` | `auto-ingest` | `auto-lint` | Bot branch name prefix |
+| `commit_op_token` | `auto-ingest` | `auto-lint` | Commit message op token |
+| `pr_title_prefix` | `PR Auto-Inject - ` | `PR Auto-Lint - ` | PR title prefix |
+| `caps.max_files_changed` | `20` | `100` | Auto-merge blocked above this |
+| `caps.max_lines_changed` | `2000` | `5000` | Auto-merge blocked above this |
+| `path_allowlist` | `wiki/** raw/** INBOX/**` | `wiki/**` | Auto-merge blocked if any path doesn't match |
+
+After editing, re-run `uv run python setup.py` to re-render unit files. Changes to `interval_minutes`, `calendar`, or `enabled` require re-render to take effect; per-fire knobs (`caps`, `model`, `path_allowlist`, etc.) are read fresh each tick.
+
+**Model selection:** Claude Code currently supports `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`. Opus is the default for ingest (quality-critical content writes). Sonnet is the default for lint (routine maintenance). Set `model: null` on a job to fall back to the shared `claude.model` default, or to the `claude` CLI's own default if that is also null.
 
 ---
 
@@ -299,8 +336,8 @@ After editing, re-run `uv run python setup.py` to re-render unit files if you ch
 ## Uninstall
 
 ```bash
-systemctl --user disable --now dsbrain-auto-ingest.timer
-rm ~/.config/systemd/user/dsbrain-auto-ingest.{timer,service}
+systemctl --user disable --now dsbrain-auto-ingest.timer dsbrain-auto-lint.timer
+rm ~/.config/systemd/user/dsbrain-auto-{ingest,lint}.{timer,service}
 systemctl --user daemon-reload
 ```
 
@@ -325,6 +362,7 @@ server/
   README.md             # this file
   jobs/
     auto_ingest.py      # entry point — invoked by the timer
+    auto_lint.py        # entry point — weekly lint timer invokes this
     sources/            # future: Slack/Gmail/RSS pullers (one module each)
   lib/
     config.py           # config loader
@@ -337,12 +375,16 @@ server/
   units/
     dsbrain-auto-ingest.service.template
     dsbrain-auto-ingest.timer.template
+    dsbrain-auto-lint.service.template
+    dsbrain-auto-lint.timer.template
   state/                # runtime — gitignored
     logs/
-      auto_ingest.log         # app log
-      auto_ingest.systemd.log # captured stdout/stderr
-    .lock/                    # mutex
-    processed.json            # content-hash ledger
+      auto_ingest.log         # ingest app log
+      auto_ingest.systemd.log # captured stdout/stderr (ingest)
+      auto_lint.log           # lint app log
+      auto_lint.systemd.log   # captured stdout/stderr (lint)
+    .lock/                    # shared mutex (ingest + lint)
+    processed.json            # content-hash ledger (ingest only)
 ```
 
 ---

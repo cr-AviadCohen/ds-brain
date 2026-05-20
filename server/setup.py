@@ -1,4 +1,4 @@
-"""Idempotent installer for the ds-brain auto-ingest daemon.
+"""Idempotent installer for the ds-brain auto-* daemons.
 
 Run as the service user (NOT root) from inside the repo:
 
@@ -6,7 +6,8 @@ Run as the service user (NOT root) from inside the repo:
     uv sync                        # bootstrap .venv from uv.lock
     uv run python setup.py         # render + install systemd units
 
-Re-run after editing config.yaml to re-render unit files.
+Re-run after editing config.yaml to re-render unit files (changes to
+interval_minutes / calendar / enabled flags require re-render).
 """
 
 from __future__ import annotations
@@ -93,9 +94,9 @@ def check_linger() -> None:
         text=True,
     )
     if "Linger=yes" in r.stdout:
-        print(f"  linger: enabled ✓")
+        print("  linger: enabled ✓")
     else:
-        print(f"  linger: NOT enabled — run once as root:")
+        print("  linger: NOT enabled — run once as root:")
         print(f"    sudo loginctl enable-linger {user}")
 
 
@@ -106,6 +107,42 @@ def render_unit(template: Path, dest: Path, subs: dict[str, str]) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(text, encoding="utf-8")
     print(f"rendered: {dest}")
+
+
+def install_job(
+    job: cfg_mod.JobConfig,
+    shared_subs: dict[str, str],
+) -> None:
+    """Render + install one job's service + timer unit pair."""
+    short = job.name.replace("_", "-")  # auto_ingest → auto-ingest
+    base = f"dsbrain-{short}"
+    service_tpl = UNIT_TEMPLATE_DIR / f"{base}.service.template"
+    timer_tpl = UNIT_TEMPLATE_DIR / f"{base}.timer.template"
+    if not service_tpl.exists() or not timer_tpl.exists():
+        die(f"missing template(s) for {job.name}: {service_tpl} / {timer_tpl}")
+
+    subs = dict(shared_subs)
+    kind = job.trigger_kind()
+    if kind == "interval":
+        subs["__INTERVAL_MINUTES__"] = str(job.interval_minutes)
+    elif kind == "calendar":
+        subs["__CALENDAR__"] = str(job.calendar)
+
+    render_unit(service_tpl, USER_UNIT_DIR / f"{base}.service", subs)
+    render_unit(timer_tpl, USER_UNIT_DIR / f"{base}.timer", subs)
+
+    if job.enabled:
+        subprocess.run(
+            ["systemctl", "--user", "enable", "--now", f"{base}.timer"],
+            check=True,
+        )
+        print(f"  enabled+started: {base}.timer")
+    else:
+        subprocess.run(
+            ["systemctl", "--user", "disable", "--now", f"{base}.timer"],
+            check=False,
+        )
+        print(f"  disabled: {base}.timer (config says enabled=false)")
 
 
 def main() -> int:
@@ -123,30 +160,20 @@ def main() -> int:
     print(f"  gh:     {gh_path}")
     print(f"  uv:     {uv_path}")
 
-    # Ensure state dirs exist.
     (SERVER_DIR / "state" / "logs").mkdir(parents=True, exist_ok=True)
+    USER_UNIT_DIR.mkdir(parents=True, exist_ok=True)
 
-    subs = {
+    shared_subs = {
         "__REPO_PATH__": str(REPO_ROOT),
         "__HOME_PATH__": str(Path.home()),
         "__UV_BIN__": uv_path,
-        "__INTERVAL_MINUTES__": str(cfg.interval_minutes),
     }
 
-    USER_UNIT_DIR.mkdir(parents=True, exist_ok=True)
-    units = ["dsbrain-auto-ingest.service", "dsbrain-auto-ingest.timer"]
-    for unit in units:
-        src = UNIT_TEMPLATE_DIR / f"{unit}.template"
-        dst = USER_UNIT_DIR / unit
-        if not src.exists():
-            die(f"missing template {src}")
-        render_unit(src, dst, subs)
+    for job in (cfg.auto_ingest, cfg.auto_lint):
+        print(f"\n[{job.name}] model={job.model or 'default'} enabled={job.enabled}")
+        install_job(job, shared_subs)
 
     subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
-    subprocess.run(
-        ["systemctl", "--user", "enable", "--now", "dsbrain-auto-ingest.timer"],
-        check=True,
-    )
 
     print()
     print("Lingering check:")
@@ -156,8 +183,11 @@ def main() -> int:
     print("Verify:")
     print("  systemctl --user list-timers | grep dsbrain")
     print("  systemctl --user status dsbrain-auto-ingest.timer")
+    print("  systemctl --user status dsbrain-auto-lint.timer")
     print("  journalctl --user -u dsbrain-auto-ingest.service -n 20")
+    print("  journalctl --user -u dsbrain-auto-lint.service -n 20")
     print(f"  tail -f {SERVER_DIR}/state/logs/auto_ingest.log")
+    print(f"  tail -f {SERVER_DIR}/state/logs/auto_lint.log")
     return 0
 
 

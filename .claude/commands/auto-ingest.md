@@ -1,15 +1,17 @@
 ---
-description: Fully autonomous ingest of an INBOX file — no approval gates, no clarifying questions. Designed for headless invocation via `claude -p` from systemd/launchd.
+description: Fully autonomous ingest of an INBOX file — no approval gates, no clarifying questions. Designed for headless invocation via `claude -p` from `server/jobs/auto_ingest.py`.
 argument-hint: <path-to-source-file-in-INBOX-or-raw>
 ---
 
 Autonomously ingest `$ARGUMENTS` into the wiki per `CLAUDE.md` § Operations.
 
 **This command runs without a human in the loop.** It is invoked by
-`scripts/systemd/inbox-ingest.sh` (Ubuntu VM) or
-`scripts/cron/inbox-ingest.sh` (macOS) after `git pull` lands new files in
-`INBOX/`. There is no one to answer questions. Proceed straight through all
-phases and commit + push on completion.
+`server/jobs/auto_ingest.py` (the Ubuntu VM auto-ingest daemon) inside a
+freshly created bot branch named `auto-ingest/<UTC-timestamp>-<short-sha>`.
+The Python wrapper handles branching, push, PR creation, and auto-merge.
+There is no one to answer questions. Proceed straight through all phases
+and **commit** on completion. **Do NOT push or open a PR — the wrapper
+does that after inspecting the diff against blast-radius caps.**
 
 ## Preconditions (fail fast if violated)
 
@@ -18,9 +20,10 @@ modifying any file**:
 
 - `$ARGUMENTS` is non-empty and points to a real file under `INBOX/` or
   `raw/`.
-- Current branch is `unified`.
-- Working tree is clean apart from `$ARGUMENTS` itself (an untracked or
-  newly-pulled file is expected and OK; unrelated dirty files are not).
+- Current branch starts with `auto-ingest/` (the wrapper's bot branch).
+  If the branch is `unified` you are being invoked outside the daemon —
+  refuse and exit non-zero.
+- Working tree is clean apart from `$ARGUMENTS` itself.
 - The file is not `INBOX/README.md` and not a dotfile.
 
 ## Workflow
@@ -61,6 +64,11 @@ modifying any file**:
      a `## Open questions` bullet on the affected wiki page citing both
      the existing claim and the new one with their sources, and leave the
      existing claim in place.
+   - **Provenance frontmatter.** Every wiki page **created** by this
+     command must include `provenance: auto-ingest` in its frontmatter.
+     Pages **modified** (appending to `## Mentions`, adding `## Open
+     questions`) do not need this — provenance reflects the page's
+     original author.
 
 3. **Execute — parallelise independent work.**
 
@@ -101,25 +109,25 @@ modifying any file**:
      Open questions logged: <count>
      ```
 
-   **Phase D — commit + push:** Stage all touched files (including
-   `wiki/Log/wiki-ops.md` and the moved source), commit
-   `auto-ingest | <source title>`, `git push` to `origin/unified`. If push
-   is rejected because remote moved, run `git pull --ff-only origin
-   unified` once and retry the push. If the retry also fails, exit
-   non-zero — leave the local commit in place; the next 5-min pull cycle
-   plus the inbox-ingest backstop will reconcile.
+   **Phase D — commit only (NO push, NO PR):**
+   - Stage all touched files (including `wiki/Log/wiki-ops.md` and the
+     moved source).
+   - `git commit -m "auto-ingest | <source title>"`.
+   - **Do NOT `git push`.** **Do NOT open a PR.** The wrapper
+     (`server/jobs/auto_ingest.py`) inspects the resulting diff against
+     blast-radius caps and handles push + `gh pr create` + auto-merge.
 
 4. **Final report (to stdout, for the journal):**
    - One line per wiki page created / modified.
    - One line per file moved (old → new).
-   - Commit SHA and push result.
+   - Local commit SHA (no push result — wrapper logs that).
    - Count of `## Open questions` bullets added across all touched pages.
    - Single line `auto-ingest: ok` or `auto-ingest: degraded — <reason>`.
 
    `degraded` is fine — it means the file was filed, but a human should
    look at the Open questions on the next session. `degraded` is **not**
    an error; exit 0. Only exit non-zero on preconditions failure, parse
-   failure, push retry failure, or any tool error.
+   failure, or any tool error.
 
 ## Hard rules
 
@@ -132,21 +140,21 @@ modifying any file**:
   valve.
 - **No subagent dispatch.** Single `claude -p` process, single log
   stream.
+- **No `git push`.** The wrapper owns push + PR + merge.
 - Wikilinks only (`[[Name]]`).
 - Every wiki page must include `wiki` in its `tags` array.
+- Every wiki page **created** by this command must include
+  `provenance: auto-ingest` in frontmatter.
 - Phase A and Phase B must batch tool calls in a single message.
-- Auto-commit + push is mandatory. `wiki/Log/wiki-ops.md` must always be
-  in the commit. The commit op token is `auto-ingest` (not `ingest`) so
-  the audit trail distinguishes human-driven from autonomous runs.
+- The commit op token is `auto-ingest` (not `ingest`) so the audit trail
+  distinguishes human-driven from autonomous runs.
 - If the run cannot complete, **leave the source file in `INBOX/`** so
-  the next path-trigger fires again (or so a human can pick it up).
-  Never delete the source on failure.
+  the next timer fires again. Never delete the source on failure.
 
 ## What this command is NOT
 
 - It is not `/ingest`. Use `/ingest` interactively when a human is
   available to approve destination + decisions.
-- It does not bulk-process the whole INBOX. The caller
-  (`scripts/systemd/inbox-ingest.sh`) iterates one file at a time and
-  invokes this command per file, so each commit corresponds to one
-  source.
+- It does not bulk-process the whole INBOX. The wrapper
+  (`server/jobs/auto_ingest.py`) iterates one file at a time and invokes
+  this command per file, so each PR corresponds to one source.
