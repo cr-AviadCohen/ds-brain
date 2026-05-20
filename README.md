@@ -46,7 +46,7 @@ read/write the same repo.
 
 ## Triggers
 
-- **SessionStart** — `.claude/hooks/inbox-check.sh` flags unprocessed INBOX/
+- **SessionStart** — `.claude/hooks/inbox-check.py` flags unprocessed INBOX/
   files
 - **PreToolUse (Bash, Write, Edit)** — `.claude/hooks/guard_immutable.py`
   enforces raw/ immutability

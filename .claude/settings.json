@@ -35,7 +35,7 @@
       "Bash(cd tools && python -m lint.run_all)",
       "Bash(claude -p:*)",
       "Bash(python3 .claude/hooks/guard_immutable.py)",
-      "Bash(.claude/hooks/inbox-check.sh)"
+      "Bash(python3 .claude/hooks/inbox-check.py)"
     ],
     "deny": [
       "Bash(git reset --hard:*)",
@@ -51,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/inbox-check.sh"
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/inbox-check.py"
           }
         ]
       }

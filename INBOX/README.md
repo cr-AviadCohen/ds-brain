@@ -16,5 +16,5 @@ by hand, PDFs, slack exports) awaiting ingest.
   (`.claude/hooks/guard_immutable.py`) enforces this.
 - `/ingest` moves the source out of INBOX/ into the agreed `raw/<tab>/`
   destination using `git mv` so history is preserved.
-- The SessionStart hook (`.claude/hooks/inbox-check.sh`) auto-injects a
+- The SessionStart hook (`.claude/hooks/inbox-check.py`) auto-injects a
   reminder when this folder has unprocessed files.
