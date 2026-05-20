@@ -32,11 +32,11 @@ read/write the same repo.
 | --- | --- | --- |
 | Raw | `raw/`, `INBOX/` | Humans (immutable to Claude — guarded by PreToolUse hook) |
 | Wiki | `wiki/{Entities,Meetings,Decisions,Ideas,Research,Syntheses,Sources,Connections,🔥 Hot Notes,🗺️ Maps,📦 Archive,Memories,Log}/` | Claude |
-| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `scripts/`, `server/` | DS leadership + Claude |
+| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `server/` | DS leadership + Claude |
 
-## Tooling (`scripts/`, `tools/`, `server/`)
+## Tooling (`.claude/hooks/`, `tools/`, `server/`)
 
-- `scripts/hooks/guard_immutable.py` — PreToolUse guard blocking writes to
+- `.claude/hooks/guard_immutable.py` — PreToolUse guard blocking writes to
   `raw/` and `INBOX/`
 - `tools/lint/run_all.py` — deterministic lint (frontmatter / orphans /
   stale links) with thread-pooled fan-out
@@ -48,7 +48,7 @@ read/write the same repo.
 
 - **SessionStart** — `.claude/hooks/inbox-check.sh` flags unprocessed INBOX/
   files
-- **PreToolUse (Bash, Write, Edit)** — `scripts/hooks/guard_immutable.py`
+- **PreToolUse (Bash, Write, Edit)** — `.claude/hooks/guard_immutable.py`
   enforces raw/ immutability
 - **Ubuntu VM (systemd user timers)** — `server/jobs/auto_ingest.py` every
   5 min ingests new `INBOX/` files via `claude -p "/auto-ingest …"`;

@@ -17,7 +17,7 @@ Once the [[DS Brain]] goes team-wide on a unified branch ([[2026-05-12 — Unifi
 
 ## Decision
 
-Local Claude instances are constrained to **read `wiki/` for queries and write only into `INBOX/`**. Writes to `raw/` and `wiki/` from any local Claude are forbidden. The constraint is enforced primarily through a robust Skill / system-prompt boundary distributed with the brain, and is intended to be backed by a filesystem-level guard analogous to the existing `scripts/hooks/guard_immutable.py` rule for `raw/`.
+Local Claude instances are constrained to **read `wiki/` for queries and write only into `INBOX/`**. Writes to `raw/` and `wiki/` from any local Claude are forbidden. The constraint is enforced primarily through a robust Skill / system-prompt boundary distributed with the brain, and is intended to be backed by a filesystem-level guard analogous to the existing `.claude/hooks/guard_immutable.py` rule for `raw/`.
 
 ## Why
 
@@ -33,7 +33,7 @@ The ingest pipeline (`/ingest`, `/lint`) is the only path that keeps wikilinks, 
 
 - All new material lands in `INBOX/` first, regardless of source (human drop, Claude-generated note, exported source).
 - The local Claude Skill must explicitly describe the read/write surface and refuse `wiki/` / `raw/` writes.
-- The `scripts/hooks/guard_immutable.py` filesystem guard should be extended to block `wiki/` writes from non-server agents, providing defence in depth beneath the prompt boundary.
+- The `.claude/hooks/guard_immutable.py` filesystem guard should be extended to block `wiki/` writes from non-server agents, providing defence in depth beneath the prompt boundary.
 - `/query` remains read-only by construction; `/ingest`, `/lint`, `/remove`, `/braindump` execute on the server only.
 - Editor UX trade-off: a user who wants a quick wiki correction must drop a note into `INBOX/` rather than fixing in place.
 

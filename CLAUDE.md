@@ -14,7 +14,7 @@ frontmatter, Obsidian config (`.obsidian/`), and `.claude/` hooks +
 commands.
 
 The vault is multi-author. **Raw layer is immutable to Claude.** The
-`scripts/hooks/guard_immutable.py` PreToolUse hook enforces this.
+`.claude/hooks/guard_immutable.py` PreToolUse hook enforces this.
 
 ## Three-layer architecture (Karpathy)
 
@@ -54,7 +54,7 @@ The vault is multi-author. **Raw layer is immutable to Claude.** The
      top-level folder, every page bulleted with a one-line summary
    - `Log/` — `wiki-ops.md` (audit trail), `pulse.md` (daily ops notes)
 
-3. **Schema** — `CLAUDE.md`, `.claude/`, `tools/`, `scripts/`. Defines
+3. **Schema** — `CLAUDE.md`, `.claude/`, `tools/`, `server/`. Defines
    conventions, commands, hooks, lint. Co-evolves between DS leadership and
    Claude.
 

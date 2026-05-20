@@ -31,7 +31,7 @@ In-meeting arbitration (via Claude) confirmed that git does not natively support
 ## Consequences
 
 - All four team members work off the `unified` branch with the same view of the repo (including the schema layer).
-- The local-Claude boundary must be implemented as a robust Skill / system prompt and ideally backed by an extended `scripts/hooks/guard_immutable.py` covering `wiki/` writes from non-server agents.
+- The local-Claude boundary must be implemented as a robust Skill / system prompt and ideally backed by an extended `.claude/hooks/guard_immutable.py` covering `wiki/` writes from non-server agents.
 - Schema-layer change-control becomes a process question rather than a structural one — must be addressed before the team grows beyond four.
 - Tooling sprawl avoided: no `git subtree`, no folder-subset sync scripts, no parallel CI for two branches.
 

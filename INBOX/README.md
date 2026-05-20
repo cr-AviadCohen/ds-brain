@@ -13,7 +13,7 @@ by hand, PDFs, slack exports) awaiting ingest.
 
 - INBOX/ sits **outside** `raw/`. Claude reads files here, may add summary
   frontmatter, but never edits body content. The PreToolUse guard
-  (`scripts/hooks/guard_immutable.py`) enforces this.
+  (`.claude/hooks/guard_immutable.py`) enforces this.
 - `/ingest` moves the source out of INBOX/ into the agreed `raw/<tab>/`
   destination using `git mv` so history is preserved.
 - The SessionStart hook (`.claude/hooks/inbox-check.sh`) auto-injects a

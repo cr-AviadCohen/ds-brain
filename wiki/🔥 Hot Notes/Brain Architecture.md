@@ -16,7 +16,7 @@ last_updated: 2026-05-11
 | --- | --- | --- | --- |
 | Raw | `raw/`, `INBOX/` | Humans | Append-only (guarded by PreToolUse hook) |
 | Wiki | `wiki/` | Claude | Free |
-| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `scripts/` | DS leadership + Claude | Co-evolves |
+| Schema | `CLAUDE.md`, `.claude/`, `tools/`, `server/` | DS leadership + Claude | Co-evolves |
 
 ## Topology (team-wide rollout — 2026-05-12)
 

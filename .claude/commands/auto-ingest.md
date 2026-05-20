@@ -132,7 +132,7 @@ modifying any file**:
 ## Hard rules
 
 - **Never edit a `raw/` note's body.** The PreToolUse guard
-  (`scripts/hooks/guard_immutable.py`) enforces this; if you hit it, the
+  (`.claude/hooks/guard_immutable.py`) enforces this; if you hit it, the
   ingest is wrong — back out the touched file from the staging set and
   exit non-zero rather than committing partial state.
 - **No clarifying questions.** There is no one to answer. Use the

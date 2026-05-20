@@ -27,7 +27,7 @@ Three layers per Karpathy:
 
 - **Raw** (`raw/`, `INBOX/`) — append-only, human-authored.
 - **Wiki** (`wiki/`) — Claude-synthesised, Markdown + YAML frontmatter + Obsidian-style wikilinks.
-- **Schema** (`CLAUDE.md`, `.claude/`, `tools/`, `scripts/`) — co-evolved governance and commands (`/ingest`, `/query`, `/lint`, `/remove`, `/braindump`).
+- **Schema** (`CLAUDE.md`, `.claude/`, `tools/`, `server/`) — co-evolved governance and commands (`/ingest`, `/query`, `/lint`, `/remove`, `/braindump`, `/auto-ingest`, `/auto-lint`).
 
 Topology for team rollout (decided 2026-05-12):
 
@@ -47,7 +47,7 @@ active — local prototype fully functional on Aviad's machine (this repo on the
 
 ## Risks
 
-- **Sync conflicts** if the local boundary Skill is bypassed and a local Claude writes directly to `wiki/`. Mitigation: prompt-level boundary plus the existing `scripts/hooks/guard_immutable.py` filesystem guard; ideally extend the guard to cover `wiki/` writes from non-server agents.
+- **Sync conflicts** if the local boundary Skill is bypassed and a local Claude writes directly to `wiki/`. Mitigation: prompt-level boundary plus the existing `.claude/hooks/guard_immutable.py` filesystem guard; ideally extend the guard to cover `wiki/` writes from non-server agents.
 - **Server VM single point of failure** for ingest + lint — outage stalls the corpus update flow without blocking local queries (git state is still readable).
 - **Schema co-evolution** under multiple authors — `.claude/`, `CLAUDE.md`, `tools/` are powerful surfaces; uncoordinated edits could break commands or invariants. Needs a change-control discipline.
 - **Concurrent `INBOX/` writes** from multiple local clients need a serialisation story on the server (queue order, single-flight ingest loop, or per-file lock).

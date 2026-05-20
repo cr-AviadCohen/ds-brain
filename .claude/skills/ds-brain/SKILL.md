@@ -1,6 +1,6 @@
 ---
 name: ds-brain
-description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Both reads and writes go through the GitHub MCP (`@modelcontextprotocol/server-github`) against `cybereason-labs/ds-brain` on branch `unified`. Reads use `search_code` and `get_file_contents`; writes use `create_or_update_file` into the repo's INBOX/ folder. No local clone needed; no Obsidian dependency. Each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if the GitHub MCP is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, scripts/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install git mcp", "install github mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
+description: Use this skill whenever the user wants to query, search, or read the Data Science team's shared second brain (the Obsidian-style wiki at the ds-brain repo), OR wants to add information into it — notes, meeting summaries, insights, raw materials, decisions, references, links, action items, or follow-ups. Triggers on phrases like "search the brain", "what do we know about", "summarize what the brain says", "save this to the brain", "push this to the brain", "add to the brain", "store in the DS brain", "drop this in the inbox", "remember this for the team", "what's connected to this project/person", "find previous decisions about", and similar. Also triggers on any request to retrieve team context for ongoing work, traverse links between notes, or stash conversation insights so the team can find them later. Both reads and writes go through the GitHub MCP (`@modelcontextprotocol/server-github`) against `cybereason-labs/ds-brain` on branch `unified`. Reads use `search_code` and `get_file_contents`; writes use `create_or_update_file` into the repo's INBOX/ folder. No local clone needed; no Obsidian dependency. Each team member uses their own fine-grained Personal Access Token so commits carry their own GitHub identity. MCP-required — if the GitHub MCP is missing, walks the user through one-time install rather than silently falling back to filesystem or local git. Never touches wiki/, raw/, .claude/, tools/, server/, or any other structural file directly — the central server-side ingest pipeline owns all knowledge restructuring. Also triggers on first-time setup intents ("install git mcp", "install github mcp", "set up the brain", "onboard me to the DS brain", "how do I configure this", "the brain isn't working") — in those cases, walk the user through references/setup.md.
 ---
 
 # Data Science Brain
@@ -16,7 +16,7 @@ The brain is **multi-author** and has a strict separation of concerns:
 | `raw/` | Source-of-truth artifacts (decks, transcripts, docs) | Immutable. Hooks block edits. |
 | `wiki/` | Synthesized notes, entities, decisions, research | A central server-side Claude process |
 | `INBOX/` | Unprocessed material waiting to be ingested | **This is the only layer this skill writes to.** |
-| Schema (`CLAUDE.md`, `.claude/`, `scripts/`, `tools/`) | Conventions, hooks, commands, lint | Maintainers only |
+| Schema (`CLAUDE.md`, `.claude/`, `tools/`, `server/`) | Conventions, hooks, commands, lint, automation | Maintainers only |
 
 The central server-side process (`/ingest`, `/lint`, etc., run from a maintainer's machine) is responsible for pulling new INBOX files, transforming them into wiki notes, resolving links, and maintaining structure. Local team members never run that pipeline — they only feed material into INBOX and read the resulting wiki.
 
@@ -221,7 +221,7 @@ These are non-negotiable. The skill enforces a write boundary so the central ing
 | `INBOX/` | ✓ | ✓ |
 | `wiki/` | ✓ | ✗ |
 | `raw/` | ✓ | ✗ (and PreToolUse hook will block) |
-| `.claude/`, `scripts/`, `tools/`, `hooks/` | ✓ | ✗ |
+| `.claude/`, `tools/`, `server/` | ✓ | ✗ |
 | `CLAUDE.md`, `AGENTS.md`, top-level schema files | ✓ | ✗ |
 | `.obsidian/` | ✓ | ✗ |
 

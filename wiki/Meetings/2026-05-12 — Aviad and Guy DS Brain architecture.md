@@ -48,7 +48,7 @@ last_updated: 2026-05-12
 ## Open questions
 
 - What polling / trigger cadence does the server VM use for git-pull → ingest → lint, and how does it serialise concurrent `INBOX/` writes from multiple local clients?
-- What enforces the local-Claude boundary at runtime — purely the Skill prompt, or also a filesystem / git pre-commit guard analogous to the existing `scripts/hooks/guard_immutable.py`?
+- What enforces the local-Claude boundary at runtime — purely the Skill prompt, or also a filesystem / git pre-commit guard analogous to the existing `.claude/hooks/guard_immutable.py`?
 - How is conflict resolved if two team members simultaneously drop overlapping or contradicting material into `INBOX/`?
 - How is the schema layer (`.claude/`, `CLAUDE.md`, `tools/`, `scripts/`) versioned and reviewed when the team grows beyond four people, or when local Claudes themselves want to evolve it?
 - Does the [[Martin News Chatbot]] collaborator team's lack of git workflow block the production hand-off, or does a different exchange format suffice?

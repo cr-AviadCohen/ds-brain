@@ -14,7 +14,7 @@
 |---|---|
 | `PathModified=INBOX/` + 5-min `git pull` is a self-firing loop (Contrarian) | No inotify/path-watcher. Single timer. `git pull` happens **inside** the timer fire, under mutex. |
 | Distributed-write conflict on `wiki/INDEX.md`, `wiki/Log/wiki-ops.md` (Reviewer 3) | PR + `gh pr merge --auto --squash` — GitHub serializes the merge, not the VM. Per-VM mutex is no longer load-bearing for correctness. |
-| `--dangerously-skip-permissions` headless = prompt-injection-to-RCE (Outsider, Reviewer 2) | Use `--permission-mode bypassPermissions` only. `scripts/hooks/guard_immutable.py` PreToolUse hook stays active. |
+| `--dangerously-skip-permissions` headless = prompt-injection-to-RCE (Outsider, Reviewer 2) | Use `--permission-mode bypassPermissions` only. `.claude/hooks/guard_immutable.py` PreToolUse hook stays active. |
 | `git add -A` commits stray files / leaked secrets (Outsider) | Wrapper owns branching. Only the bot-branch diff lands in the PR. Path allowlist (`wiki/**`, `raw/**`, `INBOX/**`) enforced as a cap. |
 | Multiple commits per ingest = hard revert | Squash-merge → one revertable commit per ingest. |
 | No idempotency, replays after pull rewrites INBOX (Contrarian) | Content-hash ledger keyed by SHA-256 of file content, survives renames + pulls. |
@@ -71,9 +71,9 @@ server/
 `.gitignore` updated to ignore `server/.venv/`, `server/state/.lock/`, `server/state/logs/*` (except `.gitkeep`), `server/state/processed.json{,.tmp,.corrupt}`, and `__pycache__` under `server/**`.
 
 Relationship to other dirs:
-- **`scripts/hooks/guard_immutable.py`** — kept. Active PreToolUse hook wired in `.claude/settings.json`. Runs inside every Claude session including the headless `claude -p` invoked by the daemon. Sole filesystem-level rail against prompt-injected writes to `raw/`.
-- **`scripts/cron/weekly-lint.sh`** — kept. Separate weekly lint automation, unrelated to auto-ingest.
-- **`tools/`** — kept. Local lint + convert utilities, separate uv env, unrelated to the VM daemon.
+- **`.claude/hooks/guard_immutable.py`** — Active PreToolUse hook wired in `.claude/settings.json`. Runs inside every Claude session including the headless `claude -p` invoked by the daemon. Sole filesystem-level rail against prompt-injected writes to `raw/`. (Previously at `scripts/hooks/guard_immutable.py` — moved 2026-05-20 when `scripts/` was retired in favour of `.claude/hooks/` for session-level guards and `server/` for VM automation.)
+- **`server/jobs/auto_lint.py`** — Weekly autonomous lint timer, replaces the previous `scripts/cron/weekly-lint.sh` cron.
+- **`tools/`** — Local lint + convert utilities, separate uv env, unrelated to the VM daemon.
 
 ---
 

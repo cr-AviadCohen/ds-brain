@@ -22,10 +22,9 @@
       "Bash(mkdir -p wiki/*)",
       "Bash(mkdir -p raw/*)",
       "Bash(mkdir -p INBOX)",
-      "Bash(mkdir -p scripts/*)",
       "Bash(mkdir -p tools/*)",
       "Bash(mkdir -p docs/*)",
-      "Bash(chmod +x scripts/*:*)",
+      "Bash(mkdir -p server/*)",
       "Bash(chmod +x .claude/hooks/*:*)",
       "Bash(uv venv:*)",
       "Bash(uv pip:*)",
@@ -35,7 +34,7 @@
       "Bash(cd tools && .venv/bin/python -m lint.run_all)",
       "Bash(cd tools && python -m lint.run_all)",
       "Bash(claude -p:*)",
-      "Bash(python3 scripts/hooks/guard_immutable.py)",
+      "Bash(python3 .claude/hooks/guard_immutable.py)",
       "Bash(.claude/hooks/inbox-check.sh)"
     ],
     "deny": [
@@ -61,13 +60,13 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/hooks/guard_immutable.py" }
+          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_immutable.py" }
         ]
       },
       {
         "matcher": "Write|Edit|NotebookEdit",
         "hooks": [
-          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/hooks/guard_immutable.py" }
+          { "type": "command", "command": "python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_immutable.py" }
         ]
       }
     ]
