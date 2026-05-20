@@ -29,3 +29,16 @@ tools/.pytest_cache/
 
 # Reference vault (read-only inspiration material, not part of the brain)
 reference/
+
+# server/ runtime state — see server/README.md
+server/.venv/
+server/__pycache__/
+server/lib/__pycache__/
+server/jobs/__pycache__/
+server/jobs/sources/__pycache__/
+server/state/.lock/
+server/state/logs/*
+!server/state/logs/.gitkeep
+server/state/processed.json
+server/state/processed.json.tmp
+server/state/processed.json.corrupt

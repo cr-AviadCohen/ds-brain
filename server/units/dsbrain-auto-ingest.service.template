@@ -1,0 +1,20 @@
+[Unit]
+Description=ds-brain: auto-ingest INBOX via Claude headless
+Documentation=https://github.com/cybereason-labs/ds-brain
+ConditionPathIsDirectory=__REPO_PATH__/INBOX
+
+[Service]
+Type=oneshot
+WorkingDirectory=__REPO_PATH__/server
+Environment=PATH=__HOME_PATH__/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HOME=__HOME_PATH__
+ExecStart=__UV_BIN__ run python jobs/auto_ingest.py
+StandardOutput=append:__REPO_PATH__/server/state/logs/auto_ingest.systemd.log
+StandardError=append:__REPO_PATH__/server/state/logs/auto_ingest.systemd.log
+
+# Ingest can run for minutes (Claude session + push + merge).
+TimeoutStartSec=30min
+
+# Rate limit refire churn.
+StartLimitIntervalSec=60
+StartLimitBurst=10

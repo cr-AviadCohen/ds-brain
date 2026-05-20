@@ -1,0 +1,68 @@
+# ds-brain server config — single source of truth for the auto-ingest daemon.
+# Edit, then re-run `uv run python setup.py` to apply schedule changes.
+
+repo:
+  branch: unified
+  remote: origin
+  # Paths the auto-ingest PR is allowed to touch. Diff exceeding this
+  # set → skip auto-merge, label PR `needs-review`.
+  path_allowlist:
+    - "wiki/**"
+    - "raw/**"
+    - "INBOX/**"
+
+schedule:
+  # Single timer: auto_ingest does git pull internally, then checks INBOX.
+  auto_ingest_interval_minutes: 5
+
+claude:
+  # Slash command (without leading slash) that the runner invokes.
+  command: auto-ingest
+  # bypassPermissions keeps PreToolUse hooks (guard_immutable.py) active.
+  # Avoid --dangerously-skip-permissions unless absolutely required.
+  permission_mode: bypassPermissions
+  timeout_minutes: 20
+  # Resolved at runtime if absent — `command -v claude`.
+  claude_bin: claude
+
+git:
+  pull_strategy: ff-only
+  bot_branch_prefix: auto-ingest
+  commit_op_token: auto-ingest
+
+pr:
+  # PR title format: "<title_prefix><description>"
+  title_prefix: "PR Auto-Inject - "
+  auto_merge: true
+  merge_strategy: squash   # squash | merge | rebase
+  needs_review_label: needs-review
+  gh_bin: gh
+
+# Blast-radius gate applied BEFORE auto-merge.
+caps:
+  max_files_changed: 20
+  max_lines_changed: 2000
+
+inbox:
+  dir: INBOX
+  ignore:
+    - "README.md"
+    - ".*"          # dotfiles
+
+logging:
+  log_dir: server/state/logs
+  trim_lines: 2000
+
+mutex:
+  lock_dir: server/state/.lock
+  stale_seconds: 1800
+
+ledger:
+  # Content-hash keyed processed-files store. Survives git pulls
+  # rewriting INBOX/ from other authors.
+  path: server/state/processed.json
+
+sources:
+  # Future: Slack/Gmail/Granola/RSS source pullers drop files into INBOX.
+  # Each entry references a module under server/jobs/sources/.
+  enabled: []

@@ -1,0 +1,12 @@
+[Unit]
+Description=ds-brain: fire auto-ingest every __INTERVAL_MINUTES__ min
+
+[Timer]
+Unit=dsbrain-auto-ingest.service
+OnBootSec=30s
+OnUnitActiveSec=__INTERVAL_MINUTES__min
+AccuracySec=15s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
