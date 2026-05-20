@@ -64,7 +64,7 @@ The vault is multi-author. **Raw layer is immutable to Claude.** The
   explicit user request. The PreToolUse guard will block accidental writes.
 - **Always update `wiki/INDEX.md`** and prepend to `wiki/Log/wiki-ops.md`
   (newest on top, below the `---` preamble separator) when ingest / lint /
-  remove / braindump / synthesis touches the wiki.
+  remove / synthesis touches the wiki.
 - **Log files in `wiki/Log/` are append-only, prepend-order**
   (`wiki-ops.md`, `pulse.md`). New entries go directly under the
   preamble — never edit or delete past entries; they are the historical
@@ -85,16 +85,18 @@ The vault is multi-author. **Raw layer is immutable to Claude.** The
 
 ## Operations
 
-Five slash-commands under `.claude/commands/`:
+Slash-commands under `.claude/commands/`:
 
 - `/ingest <path>` — process a source from `INBOX/` (or any `raw/` note)
-  into the wiki layer
+  into the wiki layer (interactive — asks before writing)
+- `/auto-ingest <path>` — autonomous variant; no clarifying questions; invoked
+  headlessly by `server/jobs/auto_ingest.py`
 - `/query <question>` — synthesise a cited answer against the wiki
-- `/lint` — deterministic + LLM health checks
+- `/lint` — deterministic + LLM health checks (interactive)
+- `/auto-lint` — autonomous variant; conservative fix-vs-flag rules;
+  invoked headlessly by `server/jobs/auto_lint.py`
 - `/remove <topic>` — two-pass removal with reference cleanup; soft-deletes
   into `📦 Archive/` by default
-- `/braindump <thoughts>` — append a free-form thought stream that Claude
-  then files into appropriate `wiki/` pages
 
 Each command's prompt and parallelisation strategy is documented in
 `.claude/commands/<name>.md`. See `superpowers:dispatching-parallel-agents`
@@ -116,8 +118,9 @@ for the batching pattern.
 ## Git workflow
 
 - Active branch: `unified`. All commits push to `origin/unified`.
-- Auto-commit + push is part of every `/ingest`, `/query` (when filing),
-  `/lint` (when fixes applied), `/remove`, `/braindump`.
+- Auto-commit + push is part of every `/ingest`, `/auto-ingest` (via
+  `server/jobs/auto_ingest.py` PR flow), `/query` (when filing),
+  `/lint`, `/auto-lint` (via `server/jobs/auto_lint.py` PR flow), `/remove`.
 - Commit message format: `<op> | <subject>` (e.g. `ingest | Tipper rollout
   retro 2026-05-08`).
 - Never `git push --force` on `unified`. Never bypass hooks with

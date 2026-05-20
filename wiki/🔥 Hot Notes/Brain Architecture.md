@@ -58,8 +58,9 @@ Full project view: [[DS Brain]].
 
 ## Operations
 
-`/ingest`, `/query`, `/lint`, `/remove`, `/braindump` — see
-`.claude/commands/`.
+`/ingest`, `/auto-ingest`, `/query`, `/lint`, `/auto-lint`, `/remove` — see
+`.claude/commands/`. Autonomous variants are invoked headlessly by the
+server-side daemons in `server/jobs/`.
 
 ## Drift / intended next changes
 

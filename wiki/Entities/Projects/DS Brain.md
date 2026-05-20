@@ -27,7 +27,7 @@ Three layers per Karpathy:
 
 - **Raw** (`raw/`, `INBOX/`) — append-only, human-authored.
 - **Wiki** (`wiki/`) — Claude-synthesised, Markdown + YAML frontmatter + Obsidian-style wikilinks.
-- **Schema** (`CLAUDE.md`, `.claude/`, `tools/`, `server/`) — co-evolved governance and commands (`/ingest`, `/query`, `/lint`, `/remove`, `/braindump`, `/auto-ingest`, `/auto-lint`).
+- **Schema** (`CLAUDE.md`, `.claude/`, `tools/`, `server/`) — co-evolved governance and commands (`/ingest`, `/auto-ingest`, `/query`, `/lint`, `/auto-lint`, `/remove`).
 
 Topology for team rollout (decided 2026-05-12):
 

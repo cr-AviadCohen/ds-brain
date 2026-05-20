@@ -14,7 +14,7 @@ navigation, not an operational log.)
 
 | File | Purpose | Update cadence | Append direction |
 | --- | --- | --- | --- |
-| `wiki-ops.md` | Audit trail of operations | Every `/ingest`, `/query` (filed), `/lint` (fixed), `/remove`, `/braindump` | Prepend below the `---` preamble separator |
+| `wiki-ops.md` | Audit trail of operations | Every `/ingest`, `/auto-ingest`, `/query` (filed), `/lint`, `/auto-lint`, `/remove` | Prepend below the `---` preamble separator |
 | `pulse.md` | One-line-per-day operational notes (VM health, cron status, anomalies) | Daily cron tick | Append at bottom |
 
 ### `wiki-ops.md` entry shape

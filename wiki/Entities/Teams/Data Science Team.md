@@ -61,7 +61,7 @@ Owners of this wiki and the Q2 project portfolio.
 
 ## Working norms
 
-- Weekly priorities tracked in [[Active Focus]]; wiki maintained via the `/ingest` + `/lint` + `/braindump` commands.
+- Weekly priorities tracked in [[Active Focus]]; wiki maintained via the `/ingest` + `/lint` commands (interactive) and the `server/` `auto-ingest` + `auto-lint` daemons (autonomous on the VM).
 - 50/50 split (post-2026-05-06) between Phoenix-side projects and Spider Labs collaboration — see [[2026-05-06 — 50-50 DS Bandwidth Split Phoenix and Spider Labs]].
 
 ## Open questions

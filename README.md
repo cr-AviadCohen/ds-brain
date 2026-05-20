@@ -24,7 +24,6 @@ read/write the same repo.
 | `/query <question>` | Synthesise a cited answer against the wiki |
 | `/lint` | Deterministic + LLM health checks |
 | `/remove <topic>` | Two-pass removal with reference cleanup |
-| `/braindump <thoughts>` | Append free-form thought stream; Claude files it |
 
 ## Layers (Karpathy)
 
